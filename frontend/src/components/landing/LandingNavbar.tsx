@@ -372,11 +372,10 @@ export default function LandingNavbar() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-apple ${
-        scrolled
-          ? "bg-[#0A0A0B]/85 backdrop-blur-md border-b border-white/[0.08] py-2 sm:py-2.5 shadow-lg shadow-black/50"
-          : "bg-transparent py-4 sm:py-5"
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-apple ${scrolled
+        ? "bg-[#0A0A0B]/85 backdrop-blur-md border-b border-white/[0.08] py-2 sm:py-2.5 shadow-lg shadow-black/50"
+        : "bg-transparent py-4 sm:py-5"
+        }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand & System Heartbeat */}
@@ -393,11 +392,10 @@ export default function LandingNavbar() {
               width={674}
               height={141}
               priority
-              className={`object-contain transition-all duration-300 ease-apple ${
-                scrolled
-                  ? "w-[118px] sm:w-[128px] h-auto"
-                  : "w-[134px] sm:w-[145px] h-auto"
-              }`}
+              className={`object-contain transition-all duration-300 ease-apple ${scrolled
+                ? "w-[118px] sm:w-[128px] h-auto"
+                : "w-[134px] sm:w-[145px] h-auto"
+                }`}
             />
           </Link>
 
@@ -426,11 +424,10 @@ export default function LandingNavbar() {
                 href={`#${item.id}`}
                 onClick={(e) => handleNavClick(e, item.id)}
                 aria-current={isActive ? "location" : undefined}
-                className={`py-1.5 transition-colors duration-200 select-none cursor-pointer ${
-                  isActive
-                    ? "text-[#F2F2F0]"
-                    : "text-[#A6A6A3] hover:text-[#F2F2F0]"
-                }`}
+                className={`py-1.5 transition-colors duration-200 select-none cursor-pointer ${isActive
+                  ? "text-[#F2F2F0]"
+                  : "text-[#A6A6A3] hover:text-[#F2F2F0]"
+                  }`}
               >
                 {item.label}
               </a>
@@ -451,7 +448,7 @@ export default function LandingNavbar() {
         {/* Actions - Desktop and Mobile Menu Trigger */}
         <div className="flex items-center gap-3">
           <a
-            href="https://github.com"
+            href=" https://github.com/Harsh-Basatwar/LoopForge.git"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub Repository"
@@ -542,11 +539,10 @@ export default function LandingNavbar() {
                         handleNavClick(e, item.id);
                         setIsMobileMenuOpen(false);
                       }}
-                      className={`flex items-center justify-between px-3.5 py-3 rounded-xl transition-all cursor-pointer select-none text-[15px] ${
-                        isActive
-                          ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30 shadow-xs"
-                          : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214]"
-                      }`}
+                      className={`flex items-center justify-between px-3.5 py-3 rounded-xl transition-all cursor-pointer select-none text-[15px] ${isActive
+                        ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30 shadow-xs"
+                        : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214]"
+                        }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className="font-mono text-xs text-[#6B6B6B]">0{idx + 1}</span>
@@ -564,7 +560,7 @@ export default function LandingNavbar() {
             {/* Bottom Actions inside Drawer */}
             <div className="space-y-3 pt-6 border-t border-white/[0.08]">
               <a
-                href="https://github.com"
+                href="h https://github.com/Harsh-Basatwar/LoopForge.git"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-white/[0.08] bg-[#111214] hover:bg-[#181A1D] text-[#F2F2F0] text-sm font-medium transition-colors cursor-pointer min-h-[44px]"
