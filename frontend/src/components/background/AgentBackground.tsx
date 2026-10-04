@@ -107,6 +107,7 @@ export default function AgentBackground() {
         "architecture",
         "self-correction",
         "diff-engine",
+        "code-diff",
         "repo-intelligence",
         "workflow",
         "how-it-works",
@@ -509,7 +510,7 @@ export default function AgentBackground() {
             ? "bg-[radial-gradient(ellipse_70%_50%_at_50%_15%,rgba(240,164,60,0.04),transparent)] opacity-100"
             : activeSection === "workflow" || activeSection === "capabilities"
             ? "bg-[radial-gradient(ellipse_60%_50%_at_20%_40%,rgba(246,213,138,0.035),transparent)] opacity-100"
-            : activeSection === "diff-engine" || activeSection === "self-correction"
+            : activeSection === "diff-engine" || activeSection === "code-diff" || activeSection === "self-correction"
             ? "bg-[radial-gradient(ellipse_60%_50%_at_80%_60%,rgba(240,164,60,0.04),transparent)] opacity-100"
             : "bg-[radial-gradient(ellipse_70%_50%_at_50%_50%,rgba(255,255,255,0.02),transparent)] opacity-80"
         }`}

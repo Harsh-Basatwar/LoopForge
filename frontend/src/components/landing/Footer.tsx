@@ -35,7 +35,7 @@ export default function Footer() {
     { href: "#how-it-works", label: "How It Works" },
     { href: "#workflow", label: "Workflow" },
     { href: "#capabilities", label: "Capabilities" },
-    { href: "#diff-engine", label: "Code Diff" },
+    { href: "#code-diff", label: "Code Diff" },
     { href: "#architecture", label: "Architecture" },
     { href: "/workspace", label: "Workspace" },
     { href: "https://github.com", label: "GitHub", external: true },

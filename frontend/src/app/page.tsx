@@ -143,26 +143,26 @@ export default function LandingPage() {
       {/* 05. Workflow Story: "From task to verified implementation" */}
       <WorkflowSection />
 
-      {/* 06. Repository Intelligence: "It understands the codebase before it changes it." */}
+      {/* 06. Pinned Scroll-Driven Workflow Story (Capabilities) */}
+      <Capabilities />
+
+      {/* 07. Repository Intelligence: "It understands the codebase before it changes it." */}
       <RepoIntelligenceSection />
 
-      {/* 07. Code Generation & Diff Interaction: "Then it writes the change and runs the tests." */}
+      {/* 08. Code Generation & Diff Interaction: "Then it writes the change and runs the tests." */}
       <CodeDiffSection />
 
-      {/* 08. Self-Correction & Loop Visualization: "When something breaks, it doesn't stop." */}
+      {/* 09. Self-Correction & Loop Visualization: "When something breaks, it doesn't stop." */}
       <SelfCorrectionSection />
 
-      {/* 09. "Not Just a Chatbot" Architectural Reveal */}
+      {/* 10. "Not Just a Chatbot" Architectural Reveal */}
       <NotJustAChatbot />
 
-      {/* 10. Interactive Product Demo: "Try the workflow" with 5 selectable tasks */}
+      {/* 11. Interactive Product Demo: "Try the workflow" with 5 selectable tasks */}
       <InteractiveDemo />
 
-      {/* 11. Technical Architecture & Stateful LangGraph Flow */}
+      {/* 12. Technical Architecture & Stateful LangGraph Flow */}
       <ArchitectureVisual />
-
-      {/* 12. Pinned Scroll-Driven Workflow Story (Capabilities) */}
-      <Capabilities />
 
       {/* 13. Technical Credibility & Stack Badges */}
       <TechnicalCredibility />

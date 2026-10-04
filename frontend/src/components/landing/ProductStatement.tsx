@@ -29,7 +29,7 @@ export default function ProductStatement() {
   }, []);
 
   return (
-    <section id="how-it-works" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10 overflow-hidden">
+    <section id="how-it-works" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10 overflow-hidden scroll-mt-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Editorial Heading with Transformation Morph */}
         <div className="max-w-3xl mx-auto text-center mb-16">

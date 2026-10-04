@@ -164,7 +164,7 @@ export default function Capabilities() {
     <section
       id="capabilities"
       ref={sectionRef}
-      className="relative z-10 bg-[#0A0A0B] border-b border-white/[0.08]"
+      className="relative z-10 bg-[#0A0A0B] border-b border-white/[0.08] scroll-mt-20"
       style={{ height: "600vh" }}
     >
       {/* Dynamic Background Glow based on current active step */}

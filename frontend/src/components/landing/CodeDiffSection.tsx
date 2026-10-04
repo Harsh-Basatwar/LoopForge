@@ -23,7 +23,8 @@ export default function CodeDiffSection() {
   ];
 
   return (
-    <section id="diff-engine" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
+    <section id="code-diff" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10 scroll-mt-20">
+      <span id="diff-engine" className="absolute -top-20 pointer-events-none" />
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-16">
