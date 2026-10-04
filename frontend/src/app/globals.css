@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-dark: #0A0A0B;
+  --color-brand-surface: #111214;
+  --color-brand-elevated: #181A1D;
+  --color-brand-inset: #0D0E10;
+  --color-brand-hover: #22252A;
+  --color-brand-active: #2A2D33;
+
+  --color-accent: #F0A43C;
+  --color-accent-hover: #F5B85D;
+  --color-accent-subtle: #F6D58A;
+
+  --color-success: #22C55E;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+
+  --color-text-primary: #F2F2F0;
+  --color-text-secondary: #A6A6A3;
+  --color-text-muted: #6B6B6B;
+  --color-text-disabled: #404040;
+
+  /* Backward compatibility aliases */
+  --color-custard: #F6D58A;
+  --color-light-gold: #F6D58A;
+  --color-sandy-orange: #F0A43C;
+  --color-sandy-orange-hover: #F5B85D;
+  --color-terracotta: #EF4444;
+  --color-restrained-green: #22C55E;
+
+  --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+  --font-sans: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --background: #0A0A0B;
+  --surface: #111214;
+  --surface-elevated: #181A1D;
+  --surface-inset: #0D0E10;
+  --surface-hover: #22252A;
+  --surface-active: #2A2D33;
+
+  --text-primary: #F2F2F0;
+  --text-secondary: #A6A6A3;
+  --text-muted: #6B6B6B;
+  --text-disabled: #404040;
+
+  --accent: #F0A43C;
+  --accent-hover: #F5B85D;
+  --accent-subtle: #F6D58A;
+
+  --success: #22C55E;
+  --error: #EF4444;
+  --info: #3B82F6;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-accent: rgba(240, 164, 60, 0.30);
+  --border-highlight: rgba(246, 213, 138, 0.20);
+  --focus-ring: rgba(240, 164, 60, 0.35);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Typography utilities */
+.font-serif,
+.font-display {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Garamond, Georgia, serif;
+  font-feature-settings: "liga" 1, "kern" 1;
+}
+
+.font-sans {
+  font-family: var(--font-geist-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.font-mono {
+  font-family: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0B;
+}
+::-webkit-scrollbar-thumb {
+  background: #181A1D;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #22252A;
+}
+
+/* Code block font */
+.font-mono-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/* Pulse animation for active node in signal amber */
+@keyframes activePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(240, 164, 60, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(240, 164, 60, 0);
+  }
+}
+
+.animate-node-active {
+  animation: activePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes revealMaskUp {
+  0% {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-reveal-1,
+.animate-reveal-2,
+.animate-reveal-3,
+.animate-reveal-subtitle,
+.animate-reveal-hero-cta,
+.animate-reveal-hero-viz {
+  opacity: 0;
+  animation-fill-mode: forwards;
+}
+
+.animate-reveal-1 {
+  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
+}
+
+.animate-reveal-2 {
+  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 240ms forwards;
+}
+
+.animate-reveal-3 {
+  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 380ms forwards;
+}
+
+.animate-reveal-subtitle {
+  animation: revealMaskUp 650ms cubic-bezier(0.16, 1, 0.3, 1) 520ms forwards;
+}
+
+.animate-reveal-hero-cta {
+  animation: revealMaskUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 640ms forwards;
+}
+
+.animate-reveal-hero-viz {
+  animation: revealMaskUp 750ms cubic-bezier(0.16, 1, 0.3, 1) 760ms forwards;
+}
+
+@keyframes ambientDrift {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-10px, 12px) scale(1.04);
+  }
+}
+
+.animate-ambient-drift {
+  animation: ambientDrift 18s ease-in-out infinite;
+}
+
+@keyframes beamFlow {
+  0% {
+    stroke-dashoffset: 100;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-beam {
+  stroke-dasharray: 20 80;
+  animation: beamFlow 3s linear infinite;
+}
+
+/* Motion easing tokens */
+.ease-apple {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

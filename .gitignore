@@ -1,0 +1,17 @@
+# Skills & Agent directories
+skills/*
+!skills/README.md
+.agents/
+.codex/
+skills-lock.json
+
+# Environment & Dependencies
+node_modules/
+.env
+.env.local
+.DS_Store
+__pycache__/
+*.py[cod]
+.venv/
+env/
+venv/
