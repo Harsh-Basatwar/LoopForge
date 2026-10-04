@@ -204,13 +204,11 @@ option {
 @keyframes revealMaskUp {
   0% {
     opacity: 0;
-    transform: translateY(24px);
-    filter: blur(4px);
+    transform: translateY(20px);
   }
   100% {
     opacity: 1;
     transform: translateY(0);
-    filter: blur(0);
   }
 }
 
@@ -222,30 +220,31 @@ option {
 .animate-reveal-hero-viz {
   opacity: 0;
   animation-fill-mode: forwards;
+  will-change: transform, opacity;
 }
 
 .animate-reveal-1 {
-  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 100ms forwards;
+  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 80ms forwards;
 }
 
 .animate-reveal-2 {
-  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 240ms forwards;
+  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 200ms forwards;
 }
 
 .animate-reveal-3 {
-  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 380ms forwards;
+  animation: revealMaskUp 700ms cubic-bezier(0.16, 1, 0.3, 1) 320ms forwards;
 }
 
 .animate-reveal-subtitle {
-  animation: revealMaskUp 650ms cubic-bezier(0.16, 1, 0.3, 1) 520ms forwards;
+  animation: revealMaskUp 650ms cubic-bezier(0.16, 1, 0.3, 1) 440ms forwards;
 }
 
 .animate-reveal-hero-cta {
-  animation: revealMaskUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 640ms forwards;
+  animation: revealMaskUp 600ms cubic-bezier(0.16, 1, 0.3, 1) 540ms forwards;
 }
 
 .animate-reveal-hero-viz {
-  animation: revealMaskUp 750ms cubic-bezier(0.16, 1, 0.3, 1) 760ms forwards;
+  animation: revealMaskUp 750ms cubic-bezier(0.16, 1, 0.3, 1) 640ms forwards;
 }
 
 @keyframes ambientDrift {

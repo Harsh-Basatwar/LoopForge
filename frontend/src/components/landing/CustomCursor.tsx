@@ -17,6 +17,7 @@ export default function CustomCursor() {
     let currentX = -100;
     let currentY = -100;
     let animationId: number;
+    let deferTimeout: ReturnType<typeof setTimeout>;
 
     const handleMouseMove = (e: MouseEvent) => {
       targetX = e.clientX;
@@ -49,12 +50,16 @@ export default function CustomCursor() {
       animationId = requestAnimationFrame(animate);
     };
 
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    document.addEventListener("mouseleave", handleMouseLeave);
-    document.addEventListener("mouseenter", handleMouseEnter);
-    animationId = requestAnimationFrame(animate);
+    // Defer cursor initialization to avoid competing with initial page paint
+    deferTimeout = setTimeout(() => {
+      window.addEventListener("mousemove", handleMouseMove, { passive: true });
+      document.addEventListener("mouseleave", handleMouseLeave);
+      document.addEventListener("mouseenter", handleMouseEnter);
+      animationId = requestAnimationFrame(animate);
+    }, 150);
 
     return () => {
+      clearTimeout(deferTimeout);
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);

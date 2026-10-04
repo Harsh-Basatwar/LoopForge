@@ -89,13 +89,22 @@ export default function HeroProductVisualization() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
 
-  // Autonomous loop with tuned pacing
+  // Autonomous loop with tuned pacing — deferred until after reveal animation completes
   useEffect(() => {
     if (isPaused) return;
-    const timer = setInterval(() => {
-      setCurrentIdx((prev) => (prev + 1) % SIMULATED_STAGES.length);
-    }, 3200);
-    return () => clearInterval(timer);
+    let timer: ReturnType<typeof setInterval>;
+
+    // Defer simulation start until after the hero-viz CSS reveal animation (760ms) finishes
+    const deferTimeout = setTimeout(() => {
+      timer = setInterval(() => {
+        setCurrentIdx((prev) => (prev + 1) % SIMULATED_STAGES.length);
+      }, 3200);
+    }, 800);
+
+    return () => {
+      clearTimeout(deferTimeout);
+      clearInterval(timer);
+    };
   }, [isPaused]);
 
   // Smooth test counter animation per stage

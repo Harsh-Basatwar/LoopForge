@@ -149,7 +149,7 @@ export default function AgentBackground() {
     };
   }, []);
 
-  // Canvas Simulation Engine
+  // Canvas Simulation Engine — deferred to avoid blocking first paint
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -159,12 +159,13 @@ export default function AgentBackground() {
     let animationId: number;
     let width = (canvas.width = window.innerWidth);
     let height = (canvas.height = window.innerHeight);
+    let isStarted = false;
 
     const handleResize = () => {
       if (!canvas) return;
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      initGraph();
+      if (isStarted) initGraph();
     };
 
     window.addEventListener("resize", handleResize);
@@ -282,8 +283,6 @@ export default function AgentBackground() {
         };
       });
     };
-
-    initGraph();
 
     // Pulse trigger clock
     let lastPulseTime = 0;
@@ -489,11 +488,28 @@ export default function AgentBackground() {
       animationId = requestAnimationFrame(render);
     };
 
-    animationId = requestAnimationFrame(render);
+    // Defer heavy initialization until after first paint
+    const startEngine = () => {
+      isStarted = true;
+      initGraph();
+      animationId = requestAnimationFrame(render);
+    };
+
+    // Use requestIdleCallback if available, otherwise setTimeout as fallback
+    let deferredId: number;
+    if (typeof window.requestIdleCallback === "function") {
+      deferredId = window.requestIdleCallback(startEngine, { timeout: 200 });
+    } else {
+      deferredId = window.setTimeout(startEngine, 100) as unknown as number;
+    }
 
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener("resize", handleResize);
+      if (typeof window.cancelIdleCallback === "function") {
+        window.cancelIdleCallback(deferredId);
+      }
+      clearTimeout(deferredId);
     };
   }, []);
 

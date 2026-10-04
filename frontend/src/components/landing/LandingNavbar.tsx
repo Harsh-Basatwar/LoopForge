@@ -333,13 +333,19 @@ export default function LandingNavbar() {
     };
   }, [startAnimationLoop]);
 
-  // Heartbeat cycling timer
+  // Heartbeat cycling timer — deferred to avoid re-renders during initial paint
   useEffect(() => {
-    const heartbeatTimer = setInterval(() => {
-      setHeartbeatIdx((prev) => (prev + 1) % heartbeatStates.length);
-    }, 2800);
+    let heartbeatTimer: ReturnType<typeof setInterval>;
+    const deferTimeout = setTimeout(() => {
+      heartbeatTimer = setInterval(() => {
+        setHeartbeatIdx((prev) => (prev + 1) % heartbeatStates.length);
+      }, 2800);
+    }, 2000);
 
-    return () => clearInterval(heartbeatTimer);
+    return () => {
+      clearTimeout(deferTimeout);
+      clearInterval(heartbeatTimer);
+    };
   }, [heartbeatStates.length]);
 
   const currentHeartbeat = heartbeatStates[heartbeatIdx];
