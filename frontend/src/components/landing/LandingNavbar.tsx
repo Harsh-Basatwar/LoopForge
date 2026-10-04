@@ -18,37 +18,30 @@ const NAV_ITEMS: NavItem[] = [
   { id: "architecture", label: "Architecture" },
 ];
 
-// Sections mapped to their corresponding nav item
-const SECTION_MAPPINGS: { elementId: string; navId: string }[] = [
-  { elementId: "how-it-works", navId: "how-it-works" },
-  { elementId: "workflow", navId: "workflow" },
-  { elementId: "capabilities", navId: "capabilities" },
-  { elementId: "repo-intelligence", navId: "code-diff" },
-  { elementId: "code-diff", navId: "code-diff" },
-  { elementId: "self-correction", navId: "code-diff" },
-  { elementId: "not-just-a-chatbot", navId: "architecture" },
-  { elementId: "demo", navId: "architecture" },
-  { elementId: "architecture", navId: "architecture" },
-  { elementId: "technical-credibility", navId: "architecture" },
-];
-
 export default function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("how-it-works");
+  const activeSectionRef = useRef<string>("how-it-works");
   const [heartbeatIdx, setHeartbeatIdx] = useState(0);
-
-  // Indicator measurement state (desktop)
-  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
-  const [isReady, setIsReady] = useState(false);
-
-  // Indicator measurement state (mobile)
-  const [mobileIndicatorStyle, setMobileIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
 
   const navRef = useRef<HTMLElement>(null);
   const itemRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const indicatorElRef = useRef<HTMLSpanElement>(null);
 
   const mobileNavRef = useRef<HTMLDivElement>(null);
   const mobileItemRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
+  const mobileIndicatorElRef = useRef<HTMLSpanElement>(null);
+
+  // Animation physics state refs
+  const currentProgressRef = useRef(0); // continuous float 0.0 to 4.0
+  const targetProgressRef = useRef(0);
+  const velocityRef = useRef(0);
+  const lastTimeRef = useRef(0);
+  const isAnimatingRef = useRef(false);
+
+  // For clicks/jumps across non-adjacent items
+  const jumpSourceRef = useRef<number | null>(null);
+  const jumpTargetRef = useRef<number | null>(null);
 
   const isManualScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -62,31 +55,106 @@ export default function LandingNavbar() {
     { label: "VERIFIED ✓", color: "text-[#22C55E]", dot: "bg-[#22C55E]" },
   ];
 
-  // Update physical indicator position for both desktop and mobile
-  const updateIndicator = useCallback(() => {
-    // Desktop measurement
-    const navEl = navRef.current;
-    const activeEl = itemRefs.current.get(activeSection);
-    if (navEl && activeEl) {
-      const navRect = navEl.getBoundingClientRect();
-      const activeRect = activeEl.getBoundingClientRect();
-      const left = activeRect.left - navRect.left;
-      const width = activeRect.width;
-      setIndicatorStyle({ left, width, opacity: 1 });
+  // Render elastic indicator directly to DOM for 60fps GPU performance
+  const renderIndicator = useCallback((progress: number) => {
+    const clamped = Math.max(0, Math.min(NAV_ITEMS.length - 1, progress));
+
+    let p = 0;
+    let baseIdx = 0;
+    let nextIdx = 0;
+
+    // Check if this is an explicit jump (e.g. user clicked a distant item)
+    if (jumpSourceRef.current !== null && jumpTargetRef.current !== null) {
+      const src = jumpSourceRef.current;
+      const dst = jumpTargetRef.current;
+      const totalDist = dst - src;
+      if (Math.abs(totalDist) > 0.001) {
+        p = Math.max(0, Math.min(1, (clamped - src) / totalDist));
+        baseIdx = src;
+        nextIdx = dst;
+      } else {
+        baseIdx = Math.round(clamped);
+        nextIdx = baseIdx;
+        p = 0;
+      }
+    } else {
+      // Normal adjacent scroll transition
+      baseIdx = Math.floor(clamped);
+      nextIdx = Math.min(baseIdx + 1, NAV_ITEMS.length - 1);
+      p = clamped - baseIdx;
     }
 
-    // Mobile measurement
-    const mobileNavEl = mobileNavRef.current;
-    const mobileActiveEl = mobileItemRefs.current.get(activeSection);
-    if (mobileNavEl && mobileActiveEl) {
-      const mobileNavRect = mobileNavEl.getBoundingClientRect();
-      const mobileActiveRect = mobileActiveEl.getBoundingClientRect();
-      const left = mobileActiveRect.left - mobileNavRect.left + mobileNavEl.scrollLeft;
-      const width = mobileActiveRect.width;
-      setMobileIndicatorStyle({ left, width, opacity: 1 });
+    // Elastic width squeeze:
+    // Starts at 100% width, shrinks down to ~40% at midpoint, expands back to 100%
+    const sinP = Math.sin(Math.PI * p);
+    const widthFactor = 1 - 0.58 * Math.pow(sinP, 1.25);
 
-      // Ensure active item is visible in mobile scroll view
-      if (!isManualScrollingRef.current) {
+    // Desktop indicator
+    const navEl = navRef.current;
+    const indicatorEl = indicatorElRef.current;
+    if (navEl && indicatorEl) {
+      const elA = itemRefs.current.get(NAV_ITEMS[baseIdx]?.id);
+      const elB = itemRefs.current.get(NAV_ITEMS[nextIdx]?.id);
+      if (elA && elB) {
+        const navRect = navEl.getBoundingClientRect();
+        const rectA = elA.getBoundingClientRect();
+        const rectB = elB.getBoundingClientRect();
+
+        const centerA = (rectA.left - navRect.left) + rectA.width / 2;
+        const centerB = (rectB.left - navRect.left) + rectB.width / 2;
+
+        const widthA = rectA.width;
+        const widthB = rectB.width;
+
+        const currentCenter = centerA + (centerB - centerA) * p;
+        const baseWidth = widthA + (widthB - widthA) * p;
+        const currentWidth = Math.max(22, baseWidth * widthFactor);
+        const currentLeft = currentCenter - currentWidth / 2;
+
+        indicatorEl.style.transform = `translateX(${currentLeft}px)`;
+        indicatorEl.style.width = `${currentWidth}px`;
+        indicatorEl.style.opacity = "1";
+      }
+    }
+
+    // Mobile indicator
+    const mobileNavEl = mobileNavRef.current;
+    const mobileIndicatorEl = mobileIndicatorElRef.current;
+    if (mobileNavEl && mobileIndicatorEl) {
+      const elA = mobileItemRefs.current.get(NAV_ITEMS[baseIdx]?.id);
+      const elB = mobileItemRefs.current.get(NAV_ITEMS[nextIdx]?.id);
+      if (elA && elB) {
+        const navRect = mobileNavEl.getBoundingClientRect();
+        const rectA = elA.getBoundingClientRect();
+        const rectB = elB.getBoundingClientRect();
+
+        const centerA = (rectA.left - navRect.left + mobileNavEl.scrollLeft) + rectA.width / 2;
+        const centerB = (rectB.left - navRect.left + mobileNavEl.scrollLeft) + rectB.width / 2;
+
+        const widthA = rectA.width;
+        const widthB = rectB.width;
+
+        const currentCenter = centerA + (centerB - centerA) * p;
+        const baseWidth = widthA + (widthB - widthA) * p;
+        const currentWidth = Math.max(18, baseWidth * widthFactor);
+        const currentLeft = currentCenter - currentWidth / 2;
+
+        mobileIndicatorEl.style.transform = `translateX(${currentLeft}px)`;
+        mobileIndicatorEl.style.width = `${currentWidth}px`;
+        mobileIndicatorEl.style.opacity = "1";
+      }
+    }
+
+    // Active label text contrast update at 0.5 midpoint
+    const closestIdx = Math.max(0, Math.min(NAV_ITEMS.length - 1, Math.round(clamped)));
+    const newActiveId = NAV_ITEMS[closestIdx]?.id;
+    if (newActiveId && newActiveId !== activeSectionRef.current) {
+      activeSectionRef.current = newActiveId;
+      setActiveSection(newActiveId);
+
+      // Scroll mobile strip smoothly if needed
+      const mobileActiveEl = mobileItemRefs.current.get(newActiveId);
+      if (mobileActiveEl && !isManualScrollingRef.current) {
         mobileActiveEl.scrollIntoView({
           behavior: "smooth",
           inline: "nearest",
@@ -94,91 +162,159 @@ export default function LandingNavbar() {
         });
       }
     }
-  }, [activeSection]);
+  }, []);
 
-  // Recalculate indicator on active section change, resize, and font load
+  // Spring animation loop with physical inertia
+  const startAnimationLoop = useCallback(() => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+    lastTimeRef.current = performance.now();
+
+    const step = (currentTime: number) => {
+      const dt = Math.min((currentTime - lastTimeRef.current) / 1000, 0.033);
+      lastTimeRef.current = currentTime;
+
+      const target = targetProgressRef.current;
+      let current = currentProgressRef.current;
+      let velocity = velocityRef.current;
+
+      // Spring constants tuned for smooth, slow, perceptible travel (550–750ms settling)
+      const stiffness = 38; // relaxed stiffness for clearly observable motion
+      const damping = 9.8;  // critically damped: zero bounce, fluid glide
+      const mass = 1.0;
+
+      const displacement = current - target;
+      const springForce = -stiffness * displacement;
+      const dampingForce = -damping * velocity;
+      const acceleration = (springForce + dampingForce) / mass;
+
+      velocity += acceleration * dt;
+      current += velocity * dt;
+
+      // Settle check
+      if (Math.abs(current - target) < 0.0008 && Math.abs(velocity) < 0.003) {
+        current = target;
+        velocity = 0;
+        jumpSourceRef.current = null;
+        jumpTargetRef.current = null;
+      }
+
+      currentProgressRef.current = current;
+      velocityRef.current = velocity;
+
+      renderIndicator(current);
+
+      if (Math.abs(current - target) > 0.0004 || Math.abs(velocity) > 0.001) {
+        requestAnimationFrame(step);
+      } else {
+        isAnimatingRef.current = false;
+        jumpSourceRef.current = null;
+        jumpTargetRef.current = null;
+      }
+    };
+
+    requestAnimationFrame(step);
+  }, [renderIndicator]);
+
+  // Initial layout measurement & font loading listener
   useEffect(() => {
-    updateIndicator();
+    const initTimer = setTimeout(() => {
+      renderIndicator(currentProgressRef.current);
+    }, 40);
 
-    if (!isReady) {
-      const timer = setTimeout(() => {
-        updateIndicator();
-        setIsReady(true);
-      }, 50);
-      return () => clearTimeout(timer);
-    }
-  }, [activeSection, updateIndicator, isReady]);
-
-  // Font loading listener to ensure metrics are exact
-  useEffect(() => {
     if (typeof document !== "undefined" && document.fonts) {
       document.fonts.ready.then(() => {
-        updateIndicator();
-        setIsReady(true);
+        renderIndicator(currentProgressRef.current);
       });
     }
 
     const handleResize = () => {
-      updateIndicator();
+      renderIndicator(currentProgressRef.current);
     };
 
     window.addEventListener("resize", handleResize, { passive: true });
-    return () => window.removeEventListener("resize", handleResize);
-  }, [updateIndicator]);
+    return () => {
+      clearTimeout(initTimer);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [renderIndicator]);
 
-  // Scroll detection to determine active section
+  // Scroll detection to continuously compute raw navigation progress
   useEffect(() => {
     let rafId: number;
 
-    const determineActiveSection = () => {
+    const calculateRawProgress = () => {
       const scrollY = window.scrollY;
       setScrolled(scrollY > 20);
 
-      // If manual smooth scrolling via click, do not override
+      // If in middle of click smooth scroll, spring loop is handling it
       if (isManualScrollingRef.current) return;
 
       // Hero / Top of page
-      if (scrollY < 240) {
-        setActiveSection("how-it-works");
+      if (scrollY < 180) {
+        targetProgressRef.current = 0;
+        startAnimationLoop();
         return;
       }
 
       // Bottom of page: activate last section
       const totalDocHeight = document.documentElement.scrollHeight;
       if (window.innerHeight + scrollY >= totalDocHeight - 70) {
-        setActiveSection("architecture");
+        targetProgressRef.current = NAV_ITEMS.length - 1; // 4.0
+        startAnimationLoop();
         return;
       }
 
-      // Probe line located in upper third of viewport (~38% down)
-      const probeY = window.innerHeight * 0.38;
+      // Section DOM references in physical order
+      const sectionElements = [
+        document.getElementById("how-it-works"),
+        document.getElementById("workflow"),
+        document.getElementById("capabilities"),
+        document.getElementById("repo-intelligence") || document.getElementById("code-diff"),
+        document.getElementById("demo") || document.getElementById("architecture"),
+      ];
 
-      let detectedSection: string | null = null;
+      // Probe thresholds:
+      // exitY: reading line where a section is considered fully active (~38% from top)
+      // entryY: entry threshold where incoming section begins transition (~85% from top)
+      const exitY = window.innerHeight * 0.38;
+      const entryY = window.innerHeight * 0.85;
 
-      // Scan sections in reverse to find the latest section whose top has crossed the reading probe
-      for (const mapping of SECTION_MAPPINGS) {
-        const el = document.getElementById(mapping.elementId);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= probeY) {
-            detectedSection = mapping.navId;
-          }
+      let progress = 0;
+
+      for (let i = 0; i < sectionElements.length - 1; i++) {
+        const nextEl = sectionElements[i + 1];
+        if (!nextEl) continue;
+
+        const nextRect = nextEl.getBoundingClientRect();
+
+        if (nextRect.top > entryY) {
+          // Next section hasn't started entering transition zone yet
+          break;
+        } else if (nextRect.top <= exitY) {
+          // Next section has passed the reading probe
+          progress = i + 1;
+        } else {
+          // Transition zone between section i and section i+1
+          const t = (entryY - nextRect.top) / (entryY - exitY);
+          progress = i + Math.max(0, Math.min(1, t));
+          break;
         }
       }
 
-      if (detectedSection) {
-        setActiveSection(detectedSection);
-      }
+      targetProgressRef.current = progress;
+      startAnimationLoop();
     };
 
     const onScroll = () => {
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(determineActiveSection);
+      rafId = requestAnimationFrame(calculateRawProgress);
     };
 
-    // Release manual scroll lock on user wheel or touch interaction
     const onUserInteraction = () => {
       isManualScrollingRef.current = false;
+      jumpSourceRef.current = null;
+      jumpTargetRef.current = null;
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     };
 
@@ -186,8 +322,7 @@ export default function LandingNavbar() {
     window.addEventListener("wheel", onUserInteraction, { passive: true });
     window.addEventListener("touchmove", onUserInteraction, { passive: true });
 
-    // Initial check
-    determineActiveSection();
+    calculateRawProgress();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -196,7 +331,7 @@ export default function LandingNavbar() {
       cancelAnimationFrame(rafId);
       if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     };
-  }, []);
+  }, [startAnimationLoop]);
 
   // Heartbeat cycling timer
   useEffect(() => {
@@ -218,12 +353,19 @@ export default function LandingNavbar() {
 
   const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
+    const targetIdx = NAV_ITEMS.findIndex((item) => item.id === id);
+    if (targetIdx === -1) return;
+
     const el = document.getElementById(id);
     if (!el) return;
 
-    // Immediately update active state & move indicator smoothly
-    setActiveSection(id);
+    // Set jump source and target for smooth elastic travel
+    jumpSourceRef.current = currentProgressRef.current;
+    jumpTargetRef.current = targetIdx;
+    targetProgressRef.current = targetIdx;
     isManualScrollingRef.current = true;
+
+    startAnimationLoop();
 
     const navOffset = 76;
     const targetTop = el.getBoundingClientRect().top + window.scrollY - navOffset;
@@ -236,7 +378,9 @@ export default function LandingNavbar() {
     if (scrollTimeoutRef.current) clearTimeout(scrollTimeoutRef.current);
     scrollTimeoutRef.current = setTimeout(() => {
       isManualScrollingRef.current = false;
-    }, 750);
+      jumpSourceRef.current = null;
+      jumpTargetRef.current = null;
+    }, 850);
   };
 
   return (
@@ -277,7 +421,7 @@ export default function LandingNavbar() {
           </div>
         </div>
 
-        {/* Desktop Navigation Links with Scroll-Synchronized Physical Slider */}
+        {/* Desktop Navigation Links with Elastic Center-Based Morphing Slider */}
         <nav
           ref={navRef}
           className="hidden md:flex items-center gap-8 text-[15px] font-medium tracking-[0.01em] relative py-1"
@@ -306,16 +450,12 @@ export default function LandingNavbar() {
             );
           })}
 
-          {/* Single Persistent Physical Sliding Underline Indicator */}
+          {/* Single Persistent Elastic Morphing Slider Indicator */}
           <span
-            className="absolute bottom-0 left-0 h-[2px] bg-[#F0A43C] rounded-full pointer-events-none shadow-[0_0_8px_rgba(240,164,60,0.35)]"
+            ref={indicatorElRef}
+            className="absolute bottom-0 left-0 h-[2px] bg-[#F0A43C] rounded-full pointer-events-none shadow-[0_0_8px_rgba(240,164,60,0.35)] opacity-0"
             style={{
-              transform: `translateX(${indicatorStyle.left}px)`,
-              width: `${indicatorStyle.width}px`,
-              opacity: indicatorStyle.opacity,
-              transition: isReady
-                ? "transform 320ms cubic-bezier(0.16, 1, 0.3, 1), width 320ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease"
-                : "opacity 200ms ease",
+              willChange: "transform, width",
             }}
             aria-hidden="true"
           />
@@ -345,7 +485,7 @@ export default function LandingNavbar() {
         </div>
       </div>
 
-      {/* Mobile Horizontal Scrollable Navigation Bar with Synchronized Indicator */}
+      {/* Mobile Horizontal Scrollable Navigation Bar with Synchronized Elastic Indicator */}
       <div className="md:hidden border-t border-white/[0.06] mt-2 pt-1 pb-1.5 px-4 overflow-x-auto no-scrollbar">
         <div
           ref={mobileNavRef}
@@ -376,14 +516,10 @@ export default function LandingNavbar() {
 
           {/* Mobile Sliding Indicator */}
           <span
-            className="absolute bottom-0 left-0 h-[2px] bg-[#F0A43C] rounded-full pointer-events-none shadow-[0_0_6px_rgba(240,164,60,0.35)]"
+            ref={mobileIndicatorElRef}
+            className="absolute bottom-0 left-0 h-[2px] bg-[#F0A43C] rounded-full pointer-events-none shadow-[0_0_6px_rgba(240,164,60,0.35)] opacity-0"
             style={{
-              transform: `translateX(${mobileIndicatorStyle.left}px)`,
-              width: `${mobileIndicatorStyle.width}px`,
-              opacity: mobileIndicatorStyle.opacity,
-              transition: isReady
-                ? "transform 300ms cubic-bezier(0.16, 1, 0.3, 1), width 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease"
-                : "opacity 200ms ease",
+              willChange: "transform, width",
             }}
             aria-hidden="true"
           />
