@@ -22,6 +22,7 @@ import ChatArea from "@/components/workspace/ChatArea";
 import Composer from "@/components/workspace/Composer";
 import AgentPanel from "@/components/workspace/AgentPanel";
 import CommandPalette from "@/components/workspace/CommandPalette";
+import { Activity, FileDiff, Terminal, FolderTree } from "lucide-react";
 
 export default function WorkspacePage() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -34,13 +35,21 @@ export default function WorkspacePage() {
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const [events, setEvents] = useState<AgentEvent[]>([]);
 
-  // Workspace View State
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isRightPanelOpen, setIsRightPanelOpen] = useState(true);
+  // Workspace View State (mobile-friendly initial states)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isRightPanelOpen, setIsRightPanelOpen] = useState(false);
   const [rightPanelTab, setRightPanelTab] = useState<"agent" | "diff" | "tests" | "files">("agent");
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("auto");
   const [composerInitialPrompt, setComposerInitialPrompt] = useState("");
+
+  // Default panels open on desktop only (>= 1024px)
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+      setIsSidebarOpen(true);
+      setIsRightPanelOpen(true);
+    }
+  }, []);
 
   const eventSourceUnsub = useRef<(() => void) | null>(null);
 
@@ -312,6 +321,78 @@ export default function WorkspacePage() {
               setComposerInitialPrompt(prompt);
             }}
           />
+
+          {/* Mobile Contextual Inspector Tabs (< 1024px) */}
+          <div className="lg:hidden flex items-center justify-around border-t border-white/[0.08] bg-[#0D0E10] px-2 py-1.5 shrink-0 z-10">
+            <button
+              type="button"
+              onClick={() => {
+                setRightPanelTab("agent");
+                setIsRightPanelOpen(true);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer min-h-[38px] ${
+                isRightPanelOpen && rightPanelTab === "agent"
+                  ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
+                  : "text-[#A6A6A3] hover:text-[#F2F2F0]"
+              }`}
+            >
+              <Activity className="w-3.5 h-3.5" />
+              <span>Agent</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setRightPanelTab("diff");
+                setIsRightPanelOpen(true);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer min-h-[38px] ${
+                isRightPanelOpen && rightPanelTab === "diff"
+                  ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
+                  : "text-[#A6A6A3] hover:text-[#F2F2F0]"
+              }`}
+            >
+              <FileDiff className="w-3.5 h-3.5" />
+              <span>
+                Changes
+                {activeTask && activeTask.generated_changes.length > 0
+                  ? ` (${activeTask.generated_changes.length})`
+                  : ""}
+              </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setRightPanelTab("tests");
+                setIsRightPanelOpen(true);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer min-h-[38px] ${
+                isRightPanelOpen && rightPanelTab === "tests"
+                  ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
+                  : "text-[#A6A6A3] hover:text-[#F2F2F0]"
+              }`}
+            >
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Tests</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setRightPanelTab("files");
+                setIsRightPanelOpen(true);
+              }}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer min-h-[38px] ${
+                isRightPanelOpen && rightPanelTab === "files"
+                  ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
+                  : "text-[#A6A6A3] hover:text-[#F2F2F0]"
+              }`}
+            >
+              <FolderTree className="w-3.5 h-3.5" />
+              <span>Files</span>
+            </button>
+          </div>
 
           {/* Floating-but-grounded Composer */}
           <Composer

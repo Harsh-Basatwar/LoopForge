@@ -23,33 +23,33 @@ export default function NotJustAChatbot() {
         {/* Dual Layer Architectural Reveal */}
         <InteractiveCard
           variant="spotlight"
-          className="rounded-xl border border-white/[0.08] bg-[#111214] p-6 sm:p-8 shadow-2xl relative overflow-hidden font-mono text-xs hover:border-white/[0.14]"
+          className="rounded-xl border border-white/[0.08] bg-[#111214] p-4 sm:p-8 shadow-2xl relative overflow-hidden font-mono text-xs hover:border-white/[0.14]"
         >
           {/* Layer 1: Surface Chat Layer */}
-          <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0D0E10] mb-6">
-            <div className="flex items-center justify-between text-[#A6A6A3] text-[11px] mb-3">
+          <div className="p-3.5 sm:p-4 rounded-xl border border-white/[0.08] bg-[#0D0E10] mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[#A6A6A3] text-[11px] mb-3 gap-1">
               <div className="flex items-center gap-2">
                 <MessageSquareCode className="w-3.5 h-3.5 text-[#F0A43C]" />
                 <span className="font-semibold text-[#F2F2F0]">Layer 1: Developer Interaction Surface</span>
               </div>
               <span className="text-[#6B6B6B]">Natural Language Task Submission</span>
             </div>
-            <div className="p-2.5 rounded bg-[#0A0A0B] border border-white/[0.06] text-[#F2F2F0]">
+            <div className="p-2.5 rounded bg-[#0A0A0B] border border-white/[0.06] text-[#F2F2F0] break-words">
               &gt; Add input validation to the Fibonacci generator and verify with pytest
             </div>
           </div>
 
           {/* Transition Connector */}
           <div className="flex flex-col items-center my-3">
-            <span className="text-[10px] text-[#F0A43C] uppercase tracking-wider mb-1 font-semibold">
+            <span className="text-[10px] text-[#F0A43C] uppercase tracking-wider mb-1 font-semibold text-center">
               ▼ Dispatched into LangGraph State Machine
             </span>
             <div className="w-0.5 h-6 bg-[#F0A43C]/50" />
           </div>
 
           {/* Layer 2: Deep Engineering Engine */}
-          <div className="p-5 rounded-xl border border-[#F0A43C]/30 bg-[#181A1D]">
-            <div className="flex items-center justify-between text-[11px] mb-4 text-[#F0A43C]">
+          <div className="p-4 sm:p-5 rounded-xl border border-[#F0A43C]/30 bg-[#181A1D]">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] mb-4 text-[#F0A43C] gap-1">
               <div className="flex items-center gap-2">
                 <Cpu className="w-3.5 h-3.5 text-[#F0A43C]" />
                 <span className="font-semibold text-[#F2F2F0]">Layer 2: Autonomous Engineering Engine</span>

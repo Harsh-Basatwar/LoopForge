@@ -66,19 +66,29 @@
   --border-strong: rgba(255, 255, 255, 0.14);
   --border-accent: rgba(240, 164, 60, 0.30);
   --border-highlight: rgba(246, 213, 138, 0.20);
-  --focus-ring: rgba(240, 164, 60, 0.35);
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-area-left: env(safe-area-inset-left, 0px);
+  --safe-area-right: env(safe-area-inset-right, 0px);
+}
+
+html {
+  height: 100%;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   background-color: var(--background);
   color: var(--text-primary);
   font-family: var(--font-cormorant), "Cormorant Garamond", Garamond, Georgia, serif;
-  overflow-x: hidden;
+  min-height: 100%;
+  min-height: 100dvh;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  position: relative;
 }
 
-/* Ensure all interactive & form controls inherit the unified primary typography */
+/* Ensure all interactive & form controls inherit the unified primary typography and avoid iOS zoom */
 button,
 input,
 textarea,
@@ -86,6 +96,37 @@ select,
 option {
   font-family: inherit;
   font-feature-settings: "liga" 1, "kern" 1;
+}
+
+/* Ensure inputs on mobile are at least 16px to prevent iOS auto-zoom */
+@media (max-width: 640px) {
+  input[type="text"],
+  input[type="search"],
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Minimum accessible touch target helper */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Responsive horizontal scroll container without page spill */
+.local-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+/* Safe area padding utilities */
+.safe-pb {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 1rem));
+}
+
+.safe-pt {
+  padding-top: max(1rem, env(safe-area-inset-top, 1rem));
 }
 
 /* Typography utilities */
@@ -199,6 +240,58 @@ option {
 .animate-popover-in {
   animation: popoverIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: top left;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInBottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-left {
+  animation: slideInLeft 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in-bottom {
+  animation: slideInBottom 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in-overlay {
+  animation: fadeInOverlay 220ms ease-out forwards;
 }
 
 @keyframes revealMaskUp {

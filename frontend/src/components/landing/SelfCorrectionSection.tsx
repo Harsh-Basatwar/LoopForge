@@ -74,10 +74,10 @@ export default function SelfCorrectionSection() {
         </div>
 
         {/* Technical Curved Loop Visualization with Animated SVG Beam */}
-        <InteractiveCard variant="spotlight" className="mb-12 p-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl relative overflow-hidden hover:border-white/[0.14]">
-          <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6 font-mono text-xs">
+        <InteractiveCard variant="spotlight" className="mb-12 p-4 sm:p-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl relative overflow-hidden hover:border-white/[0.14]">
+          <div className="flex flex-wrap items-center justify-between pb-4 border-b border-white/[0.08] mb-6 font-mono text-xs gap-2">
             <span className="text-[#6B6B6B] uppercase font-semibold">Cyclic State Machine</span>
-            <span className="text-[#F6D58A] flex items-center gap-1.5">
+            <span className="text-[#F6D58A] flex items-center gap-1.5 text-[11px] sm:text-xs">
               <RotateCw className="w-3.5 h-3.5 animate-spin" />
               <span>Feedback Loop Active (max_iterations = 3)</span>
             </span>
@@ -112,7 +112,7 @@ export default function SelfCorrectionSection() {
           </div>
 
           {/* Connected Circular Flow Display */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 relative">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 relative">
             {[
               { label: "1. CODE", sub: "Targeted Diff", color: "text-[#F0A43C]" },
               { label: "2. TEST", sub: "Detect Failure", color: "text-[#EF4444]" },
@@ -123,14 +123,14 @@ export default function SelfCorrectionSection() {
               return (
                 <div
                   key={node.label}
-                  className={`p-4 rounded-lg border transition-all text-center ${
+                  className={`p-3 sm:p-4 rounded-lg border transition-all text-center ${
                     isCurrent
                       ? "bg-[#181A1D] border-[#F0A43C] shadow-md shadow-black/50 scale-[1.02]"
                       : "bg-[#0D0E10] border-white/[0.06] opacity-75"
                   }`}
                 >
                   <div className={`font-mono text-xs font-bold ${node.color}`}>{node.label}</div>
-                  <div className="text-[11px] text-[#A6A6A3] mt-1 font-mono">{node.sub}</div>
+                  <div className="text-[10px] sm:text-[11px] text-[#A6A6A3] mt-1 font-mono">{node.sub}</div>
                 </div>
               );
             })}
@@ -149,7 +149,7 @@ export default function SelfCorrectionSection() {
                 variant="interactive"
                 revealDelay={idx * 70}
                 onClick={() => setActiveCycle(idx)}
-                className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`p-3.5 sm:p-4 rounded-xl border text-left transition-all cursor-pointer min-h-[44px] ${
                   isSelected
                     ? step.type === "error"
                       ? "bg-[#EF4444]/10 border-[#EF4444] shadow-md shadow-black/40"
@@ -189,12 +189,12 @@ export default function SelfCorrectionSection() {
         </div>
 
         {/* Code Inspection & Diagnostic Window */}
-        <InteractiveCard variant="tilt" className="rounded-xl border border-white/[0.08] bg-[#111214] p-6 shadow-2xl hover:border-white/[0.14]">
-          <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4 font-mono text-xs">
+        <InteractiveCard variant="tilt" className="rounded-xl border border-white/[0.08] bg-[#111214] p-4 sm:p-6 shadow-2xl hover:border-white/[0.14]">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-3 border-b border-white/[0.08] mb-4 font-mono text-xs gap-1 sm:gap-2">
             <span className="text-[#F2F2F0] font-medium">{current.title}</span>
             <span className="text-[#A6A6A3] text-[11px]">{current.note}</span>
           </div>
-          <pre className="p-4 rounded-lg bg-[#0D0E10] border border-white/[0.08] text-xs font-mono text-[#F2F2F0] overflow-x-auto leading-relaxed whitespace-pre select-text">
+          <pre className="p-3.5 sm:p-4 rounded-lg bg-[#0D0E10] border border-white/[0.08] text-xs font-mono text-[#F2F2F0] overflow-x-auto leading-relaxed whitespace-pre select-text">
             {current.code}
           </pre>
         </InteractiveCard>

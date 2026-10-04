@@ -82,7 +82,7 @@ export default function CodeDiffSection() {
                   >
                     <pre className="whitespace-pre font-mono text-[11px]">{line.text}</pre>
                     {hoveredLine === idx && line.note && (
-                      <div className="absolute right-4 top-1/2 -translate-y-1/2 bg-[#0A0A0B] border border-white/[0.14] text-[#F2F2F0] text-[10px] px-2 py-0.5 rounded shadow-lg pointer-events-none z-10 font-mono">
+                      <div className="hidden sm:block absolute right-4 top-1/2 -translate-y-1/2 bg-[#0A0A0B] border border-white/[0.14] text-[#F2F2F0] text-[10px] px-2 py-0.5 rounded shadow-lg pointer-events-none z-10 font-mono">
                         {line.note}
                       </div>
                     )}

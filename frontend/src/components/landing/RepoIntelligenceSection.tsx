@@ -93,10 +93,10 @@ export default function RepoIntelligenceSection() {
             variant="tilt"
             className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl overflow-hidden flex flex-col justify-between hover:border-white/[0.14]"
           >
-            <div className="h-10 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex items-center justify-between font-mono text-xs">
+            <div className="min-h-[40px] py-2 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
               <div className="flex items-center gap-2 text-[#F2F2F0]">
                 <FolderOpen className="w-3.5 h-3.5 text-[#F6D58A]" />
-                <span>ecommerce-auth-api</span>
+                <span className="truncate max-w-[160px] sm:max-w-none">ecommerce-auth-api</span>
               </div>
               <span className="text-[10px] text-[#F0A43C] font-semibold bg-[#F0A43C]/10 border border-[#F0A43C]/25 px-2 py-0.5 rounded">
                 AST Index Active
@@ -146,8 +146,8 @@ export default function RepoIntelligenceSection() {
               })}
             </div>
 
-            <div className="h-10 bg-[#0D0E10] border-t border-white/[0.08] px-4 flex items-center justify-between text-[11px] font-mono text-[#6B6B6B]">
-              <span>Indexed: 42 files (12 models, 18 tests)</span>
+            <div className="min-h-[40px] py-2 bg-[#0D0E10] border-t border-white/[0.08] px-4 flex flex-wrap items-center justify-between gap-1 text-[10px] sm:text-[11px] font-mono text-[#6B6B6B]">
+              <span>Indexed: 42 files</span>
               <span className="text-[#22C55E]">Graph Root Verified</span>
             </div>
           </InteractiveCard>
@@ -156,7 +156,7 @@ export default function RepoIntelligenceSection() {
           <InteractiveCard
             variant="spotlight"
             revealDelay={120}
-            className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] p-6 flex flex-col justify-between shadow-xl hover:border-white/[0.14]"
+            className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] p-4 sm:p-6 flex flex-col justify-between shadow-xl hover:border-white/[0.14]"
           >
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-5 font-mono text-xs">

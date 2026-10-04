@@ -111,18 +111,19 @@ export default function Composer({
   ];
 
   return (
-    <div className="p-3.5 md:p-5 bg-[#0A0A0B] border-t border-white/[0.08] shrink-0">
+    <div className="p-3 sm:p-4 md:p-5 bg-[#0A0A0B] border-t border-white/[0.08] shrink-0 safe-pb">
       <div className="max-w-[920px] mx-auto relative">
         {/* Mention File Autocomplete Popover */}
         {showMentionMenu && (
-          <div className="absolute bottom-full mb-2 left-0 w-80 bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl p-2.5 z-40 text-sm">
+          <div className="absolute bottom-full mb-2 left-0 w-[calc(100vw-32px)] max-w-sm sm:w-80 bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl p-2.5 z-40 text-sm">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08] mb-2 text-[#A6A6A3]">
               <span className="text-[13px] uppercase tracking-wider text-[#8C8C88] font-medium">
                 Mention Repository File
               </span>
               <button
                 onClick={() => setShowMentionMenu(false)}
-                className="text-[#8C8C88] hover:text-[#F2F2F0] cursor-pointer p-0.5"
+                className="text-[#8C8C88] hover:text-[#F2F2F0] cursor-pointer p-1"
+                aria-label="Close mention menu"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -132,7 +133,7 @@ export default function Composer({
               placeholder="Filter files..."
               value={mentionFilter}
               onChange={(e) => setMentionFilter(e.target.value)}
-              className="w-full bg-[#0A0A0B] border border-white/[0.08] rounded-lg px-3 py-1.5 text-[#F2F2F0] mb-2 text-sm focus:outline-none focus:border-[#F0A43C]/50"
+              className="w-full bg-[#0A0A0B] border border-white/[0.08] rounded-lg px-3 py-2 text-[#F2F2F0] mb-2 text-base sm:text-sm focus:outline-none focus:border-[#F0A43C]/50"
               autoFocus
             />
             <div className="max-h-44 overflow-y-auto space-y-0.5">
@@ -145,7 +146,7 @@ export default function Composer({
                   <button
                     key={file.path}
                     onClick={() => addFileMention(file.path)}
-                    className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-[#181A1D] text-[#A6A6A3] hover:text-[#F2F2F0] flex items-center gap-2 truncate text-sm cursor-pointer"
+                    className="w-full text-left px-2.5 py-2 rounded-lg hover:bg-[#181A1D] text-[#A6A6A3] hover:text-[#F2F2F0] flex items-center gap-2 truncate text-sm cursor-pointer min-h-[38px]"
                   >
                     <FileCode className="w-4 h-4 text-[#F0A43C] shrink-0" />
                     <span className="truncate font-mono text-xs sm:text-[13px]">{file.path}</span>
@@ -158,14 +159,15 @@ export default function Composer({
 
         {/* Commands Autocomplete Popover */}
         {showCommandsMenu && (
-          <div className="absolute bottom-full mb-2 left-0 w-80 bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl p-2.5 z-40 text-sm">
+          <div className="absolute bottom-full mb-2 left-0 w-[calc(100vw-32px)] max-w-sm sm:w-80 bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl p-2.5 z-40 text-sm">
             <div className="flex items-center justify-between pb-2 border-b border-white/[0.08] mb-2 text-[#A6A6A3]">
               <span className="text-[13px] uppercase tracking-wider text-[#8C8C88] font-medium">
                 Quick Commands
               </span>
               <button
                 onClick={() => setShowCommandsMenu(false)}
-                className="text-[#8C8C88] hover:text-[#F2F2F0] cursor-pointer p-0.5"
+                className="text-[#8C8C88] hover:text-[#F2F2F0] cursor-pointer p-1"
+                aria-label="Close commands menu"
               >
                 <X className="w-3.5 h-3.5" />
               </button>

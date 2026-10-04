@@ -82,7 +82,7 @@ export default function ArchitectureVisual() {
         {/* Technical Diagram Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Interactive Graph Canvas (7 cols) */}
-          <InteractiveCard variant="spotlight" className="lg:col-span-7 p-6 rounded-xl border border-white/[0.08] bg-[#111214] font-mono text-xs flex flex-col items-center relative overflow-hidden shadow-2xl hover:border-white/[0.14]">
+          <InteractiveCard variant="spotlight" className="lg:col-span-7 p-4 sm:p-6 rounded-xl border border-white/[0.08] bg-[#111214] font-mono text-xs flex flex-col items-center relative overflow-hidden shadow-2xl hover:border-white/[0.14]">
             {/* Auto Cycle Indicator */}
             <div className="w-full flex items-center justify-between pb-3 mb-4 border-b border-white/[0.06] text-[10px] text-[#6B6B6B]">
               <span className="uppercase font-semibold">Compiled LangGraph Topology</span>
@@ -103,9 +103,9 @@ export default function ArchitectureVisual() {
                 setIsAutoCycle(false);
                 setSelectedNode("planner");
               }}
-              className={`w-56 p-3 rounded-lg border text-center transition-all cursor-pointer ${
+              className={`w-full max-w-[240px] p-3 rounded-lg border text-center transition-all cursor-pointer ${
                 selectedNode === "planner"
-                  ? "bg-[#F6D58A]/15 border-[#F6D58A] text-[#F6D58A] shadow-md shadow-black/40 scale-105"
+                  ? "bg-[#F6D58A]/15 border-[#F6D58A] text-[#F6D58A] shadow-md shadow-black/40 scale-[1.02]"
                   : "bg-[#0D0E10] border-white/[0.08] text-[#A6A6A3] hover:border-white/[0.16]"
               }`}
             >
@@ -128,9 +128,9 @@ export default function ArchitectureVisual() {
                 setIsAutoCycle(false);
                 setSelectedNode("analyzer");
               }}
-              className={`w-56 p-3 rounded-lg border text-center transition-all cursor-pointer ${
+              className={`w-full max-w-[240px] p-3 rounded-lg border text-center transition-all cursor-pointer ${
                 selectedNode === "analyzer"
-                  ? "bg-[#3B82F6]/15 border-[#3B82F6] text-[#3B82F6] shadow-md shadow-black/40 scale-105"
+                  ? "bg-[#3B82F6]/15 border-[#3B82F6] text-[#3B82F6] shadow-md shadow-black/40 scale-[1.02]"
                   : "bg-[#0D0E10] border-white/[0.08] text-[#A6A6A3] hover:border-white/[0.16]"
               }`}
             >
@@ -153,9 +153,9 @@ export default function ArchitectureVisual() {
                 setIsAutoCycle(false);
                 setSelectedNode("coder");
               }}
-              className={`w-56 p-3 rounded-lg border text-center transition-all cursor-pointer ${
+              className={`w-full max-w-[240px] p-3 rounded-lg border text-center transition-all cursor-pointer ${
                 selectedNode === "coder"
-                  ? "bg-[#F0A43C]/15 border-[#F0A43C] text-[#F0A43C] shadow-md shadow-black/40 scale-105"
+                  ? "bg-[#F0A43C]/15 border-[#F0A43C] text-[#F0A43C] shadow-md shadow-black/40 scale-[1.02]"
                   : "bg-[#0D0E10] border-white/[0.08] text-[#A6A6A3] hover:border-white/[0.16]"
               }`}
             >
@@ -178,9 +178,9 @@ export default function ArchitectureVisual() {
                 setIsAutoCycle(false);
                 setSelectedNode("tester");
               }}
-              className={`w-56 p-3 rounded-lg border text-center transition-all cursor-pointer ${
+              className={`w-full max-w-[240px] p-3 rounded-lg border text-center transition-all cursor-pointer ${
                 selectedNode === "tester"
-                  ? "bg-white/15 border-white text-[#F2F2F0] shadow-md shadow-black/40 scale-105"
+                  ? "bg-white/15 border-white text-[#F2F2F0] shadow-md shadow-black/40 scale-[1.02]"
                   : "bg-[#0D0E10] border-white/[0.08] text-[#A6A6A3] hover:border-white/[0.16]"
               }`}
             >
@@ -192,16 +192,16 @@ export default function ArchitectureVisual() {
             </button>
 
             {/* Split Conditional Fork */}
-            <div className="w-64 flex flex-col items-center mt-2">
-              <div className="w-full flex justify-between px-10 text-[10px] text-[#6B6B6B] font-mono">
-                <span>[if test fails]</span>
-                <span>[if tests pass]</span>
+            <div className="w-full max-w-[260px] flex flex-col items-center mt-2">
+              <div className="w-full flex justify-between px-3 sm:px-6 text-[10px] text-[#6B6B6B] font-mono">
+                <span>[fails]</span>
+                <span>[passes]</span>
               </div>
-              <div className="w-48 h-4 border-t-2 border-x-2 border-white/[0.08] mt-1" />
+              <div className="w-full h-4 border-t-2 border-x-2 border-white/[0.08] mt-1" />
             </div>
 
             {/* Branch Row: Reflector on Left vs Done on Right */}
-            <div className="w-72 flex items-start justify-between">
+            <div className="w-full max-w-[260px] flex items-start justify-between gap-2.5">
               {/* Reflector */}
               <button
                 type="button"
@@ -209,9 +209,9 @@ export default function ArchitectureVisual() {
                   setIsAutoCycle(false);
                   setSelectedNode("reflector");
                 }}
-                className={`w-32 p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
+                className={`flex-1 p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
                   selectedNode === "reflector"
-                    ? "bg-[#EF4444]/15 border-[#EF4444] text-[#EF4444] shadow-md shadow-black/40 scale-105"
+                    ? "bg-[#EF4444]/15 border-[#EF4444] text-[#EF4444] shadow-md shadow-black/40 scale-[1.02]"
                     : "bg-[#0D0E10] border-white/[0.08] text-[#A6A6A3] hover:border-white/[0.16]"
                 }`}
               >
@@ -223,7 +223,7 @@ export default function ArchitectureVisual() {
               </button>
 
               {/* Pass / Done */}
-              <div className="w-32 p-2.5 rounded-lg border border-[#22C55E]/30 bg-[#22C55E]/15 text-[#22C55E] text-center">
+              <div className="flex-1 p-2.5 rounded-lg border border-[#22C55E]/30 bg-[#22C55E]/15 text-[#22C55E] text-center">
                 <div className="flex items-center justify-center gap-1 font-bold text-[11px]">
                   <CheckCircle2 className="w-3 h-3 text-[#22C55E]" />
                   <span>VERIFIED</span>

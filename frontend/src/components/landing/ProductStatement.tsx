@@ -36,12 +36,12 @@ export default function ProductStatement() {
           <span className="text-xs font-mono uppercase tracking-wider text-[#F6D58A] mb-3 block font-semibold">
             Execution vs Speculation
           </span>
-          <h2 className="font-serif font-semibold text-4xl sm:text-6xl md:text-7xl text-[#F2F2F0] leading-[1.05] tracking-[-0.01em]">
+          <h2 className="font-serif font-semibold text-3xl sm:text-6xl md:text-7xl text-[#F2F2F0] leading-[1.08] tracking-[-0.01em]">
             It doesn&apos;t just generate code.
           </h2>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-3 font-serif font-semibold text-3xl sm:text-5xl md:text-6xl tracking-[-0.01em]">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 font-serif font-semibold text-2xl sm:text-5xl md:text-6xl tracking-[-0.01em]">
             <span className="text-[#A6A6A3]">IT</span>
-            <div className="relative inline-flex items-center px-4 py-1 rounded-lg border border-white/[0.08] bg-[#111214] font-mono text-lg sm:text-2xl not-italic">
+            <div className="relative inline-flex items-center px-3 py-1 sm:px-4 rounded-lg border border-white/[0.08] bg-[#111214] font-mono text-base sm:text-2xl not-italic">
               <span
                 className={`transition-all duration-300 font-bold ${
                   mode === "generate"
@@ -51,24 +51,24 @@ export default function ProductStatement() {
               >
                 {mode === "generate" ? "GENERATE" : "VERIFY"}
               </span>
-              <span className="text-[10px] font-mono text-[#6B6B6B] ml-2.5 uppercase hidden sm:inline">
+              <span className="text-[10px] font-mono text-[#6B6B6B] ml-2 uppercase hidden sm:inline">
                 {mode === "generate" ? "Prediction" : "State Machine"}
               </span>
             </div>
             <span className="text-[#F2F2F0]">THE RESULT.</span>
           </div>
 
-          <p className="mt-6 text-base sm:text-lg text-[#A6A6A3] leading-relaxed font-sans max-w-2xl mx-auto">
+          <p className="mt-6 text-sm sm:text-lg text-[#A6A6A3] leading-relaxed font-sans max-w-2xl mx-auto">
             Most AI coding tools stop at text prediction. This system executes tests in an isolated
             sandbox, inspects failures, and iterates until the solution is proven correct.
           </p>
 
           {/* Toggle pill buttons */}
-          <div className="mt-6 inline-flex rounded-lg border border-white/[0.08] bg-[#111214] p-1 font-mono text-xs">
+          <div className="mt-6 inline-flex max-w-full flex-wrap justify-center rounded-lg border border-white/[0.08] bg-[#111214] p-1 font-mono text-xs gap-1">
             <button
               type="button"
               onClick={() => setMode("generate")}
-              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              className={`px-3 py-1.5 sm:py-1 rounded-md transition-all cursor-pointer min-h-[38px] flex items-center justify-center ${
                 mode === "generate"
                   ? "bg-[#181A1D] text-[#EF4444] font-semibold border border-white/[0.08]"
                   : "text-[#6B6B6B] hover:text-[#F2F2F0]"
@@ -79,7 +79,7 @@ export default function ProductStatement() {
             <button
               type="button"
               onClick={() => setMode("verify")}
-              className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+              className={`px-3 py-1.5 sm:py-1 rounded-md transition-all cursor-pointer min-h-[38px] flex items-center justify-center ${
                 mode === "verify"
                   ? "bg-[#181A1D] text-[#22C55E] font-semibold border border-white/[0.08]"
                   : "text-[#6B6B6B] hover:text-[#F2F2F0]"

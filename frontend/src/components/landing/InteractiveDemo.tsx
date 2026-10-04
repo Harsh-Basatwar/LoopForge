@@ -144,7 +144,7 @@ export default function InteractiveDemo() {
                 key={t.id}
                 type="button"
                 onClick={() => handleSelectTask(idx)}
-                className={`px-3.5 py-2 rounded-lg text-xs font-mono transition-all border cursor-pointer ${
+                className={`px-3.5 py-2.5 rounded-lg text-xs font-mono transition-all border cursor-pointer min-h-[44px] flex items-center ${
                   isSelected
                     ? "bg-[#F0A43C] text-[#0A0A0B] font-bold border-[#F0A43C] shadow-sm"
                     : "bg-[#111214] text-[#A6A6A3] hover:text-[#F2F2F0] border-white/[0.08] hover:border-white/[0.14]"
@@ -170,7 +170,7 @@ export default function InteractiveDemo() {
             </span>
           </div>
 
-          <div className="p-6 space-y-5">
+          <div className="p-4 sm:p-6 space-y-4 sm:space-y-5">
             {/* Task Prompt Box */}
             <div className="p-3.5 rounded-lg bg-[#0D0E10] border border-white/[0.06] text-xs">
               <span className="text-[#6B6B6B] uppercase block text-[10px] font-semibold mb-1">User Task</span>
@@ -179,16 +179,16 @@ export default function InteractiveDemo() {
 
             {/* Run Button if Idle */}
             {executionState === "idle" && (
-              <div className="pt-2 flex items-center gap-3">
+              <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                 <button
                   type="button"
                   onClick={handleRunDemo}
-                  className="flex items-center gap-2 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-bold px-4 py-2 rounded-lg text-xs transition-all shadow-md active:scale-95 cursor-pointer"
+                  className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-bold px-4 py-2.5 rounded-lg text-xs transition-all shadow-md active:scale-95 cursor-pointer min-h-[44px]"
                 >
                   <Play className="w-3.5 h-3.5 fill-[#0A0A0B]" />
                   <span>Execute Workflow Simulation</span>
                 </button>
-                <span className="text-[11px] text-[#6B6B6B]">Click to start autonomous pipeline</span>
+                <span className="text-[11px] text-[#6B6B6B] text-center sm:text-left">Click to start autonomous pipeline</span>
               </div>
             )}
 
@@ -253,13 +253,13 @@ export default function InteractiveDemo() {
 
             {/* Bottom Call to Action once passed */}
             {executionState === "passed" && (
-              <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between">
+              <div className="pt-3 border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <span className="text-[11px] text-[#A6A6A3]">
                   Ready to test on your own repository?
                 </span>
                 <Link
                   href="/workspace"
-                  className="flex items-center gap-1.5 text-xs font-bold text-[#F0A43C] hover:text-[#F5B85D] transition-colors"
+                  className="flex items-center justify-center gap-1.5 text-xs font-bold text-[#F0A43C] hover:text-[#F5B85D] transition-colors min-h-[44px] py-2"
                 >
                   <span>Open Full Workspace</span>
                   <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />

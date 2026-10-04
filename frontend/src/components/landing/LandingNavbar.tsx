@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Menu, X } from "lucide-react";
 
 interface NavItem {
   id: string;
@@ -23,14 +23,12 @@ export default function LandingNavbar() {
   const [activeSection, setActiveSection] = useState<string>("how-it-works");
   const activeSectionRef = useRef<string>("how-it-works");
   const [heartbeatIdx, setHeartbeatIdx] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   const navRef = useRef<HTMLElement>(null);
   const itemRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
   const indicatorElRef = useRef<HTMLSpanElement>(null);
-
-  const mobileNavRef = useRef<HTMLDivElement>(null);
-  const mobileItemRefs = useRef<Map<string, HTMLAnchorElement>>(new Map());
-  const mobileIndicatorElRef = useRef<HTMLSpanElement>(null);
 
   // Animation physics state refs
   const currentProgressRef = useRef(0); // continuous float 0.0 to 4.0
@@ -45,6 +43,27 @@ export default function LandingNavbar() {
 
   const isManualScrollingRef = useRef(false);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Body scroll lock and ESC key for mobile drawer
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      const originalOverflow = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      closeButtonRef.current?.focus();
+
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === "Escape") {
+          setIsMobileMenuOpen(false);
+        }
+      };
+
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        document.body.style.overflow = originalOverflow;
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }
+  }, [isMobileMenuOpen]);
 
   const heartbeatStates = [
     { label: "AGENT READY", color: "text-[#A6A6A3]", dot: "bg-[#22C55E]" },
@@ -117,50 +136,12 @@ export default function LandingNavbar() {
       }
     }
 
-    // Mobile indicator
-    const mobileNavEl = mobileNavRef.current;
-    const mobileIndicatorEl = mobileIndicatorElRef.current;
-    if (mobileNavEl && mobileIndicatorEl) {
-      const elA = mobileItemRefs.current.get(NAV_ITEMS[baseIdx]?.id);
-      const elB = mobileItemRefs.current.get(NAV_ITEMS[nextIdx]?.id);
-      if (elA && elB) {
-        const navRect = mobileNavEl.getBoundingClientRect();
-        const rectA = elA.getBoundingClientRect();
-        const rectB = elB.getBoundingClientRect();
-
-        const centerA = (rectA.left - navRect.left + mobileNavEl.scrollLeft) + rectA.width / 2;
-        const centerB = (rectB.left - navRect.left + mobileNavEl.scrollLeft) + rectB.width / 2;
-
-        const widthA = rectA.width;
-        const widthB = rectB.width;
-
-        const currentCenter = centerA + (centerB - centerA) * p;
-        const baseWidth = widthA + (widthB - widthA) * p;
-        const currentWidth = Math.max(18, baseWidth * widthFactor);
-        const currentLeft = currentCenter - currentWidth / 2;
-
-        mobileIndicatorEl.style.transform = `translateX(${currentLeft}px)`;
-        mobileIndicatorEl.style.width = `${currentWidth}px`;
-        mobileIndicatorEl.style.opacity = "1";
-      }
-    }
-
     // Active label text contrast update at 0.5 midpoint
     const closestIdx = Math.max(0, Math.min(NAV_ITEMS.length - 1, Math.round(clamped)));
     const newActiveId = NAV_ITEMS[closestIdx]?.id;
     if (newActiveId && newActiveId !== activeSectionRef.current) {
       activeSectionRef.current = newActiveId;
       setActiveSection(newActiveId);
-
-      // Scroll mobile strip smoothly if needed
-      const mobileActiveEl = mobileItemRefs.current.get(newActiveId);
-      if (mobileActiveEl && !isManualScrollingRef.current) {
-        mobileActiveEl.scrollIntoView({
-          behavior: "smooth",
-          inline: "nearest",
-          block: "nearest",
-        });
-      }
     }
   }, []);
 
@@ -467,7 +448,7 @@ export default function LandingNavbar() {
           />
         </nav>
 
-        {/* Actions */}
+        {/* Actions - Desktop and Mobile Menu Trigger */}
         <div className="flex items-center gap-3">
           <a
             href="https://github.com"
@@ -483,54 +464,129 @@ export default function LandingNavbar() {
 
           <Link
             href="/workspace"
-            className="flex items-center gap-1.5 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-semibold px-4 py-1.5 rounded-lg text-sm transition-all active:scale-95 shadow-sm group cursor-pointer"
+            className="hidden md:flex items-center gap-1.5 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-semibold px-4 py-1.5 rounded-lg text-sm transition-all active:scale-95 shadow-sm group cursor-pointer"
           >
             <span>Start Building</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5] group-hover:translate-x-0.5 transition-transform" />
           </Link>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(true)}
+            aria-label="Open navigation menu"
+            aria-expanded={isMobileMenuOpen}
+            className="md:hidden flex items-center gap-2 px-3 py-1.5 rounded-lg border border-white/[0.12] bg-[#111214] text-[#F2F2F0] hover:text-white hover:bg-[#181A1D] transition-colors cursor-pointer min-h-[40px]"
+          >
+            <span className="text-xs uppercase tracking-wider font-mono font-semibold">Menu</span>
+            <Menu className="w-4 h-4 text-[#F0A43C]" />
+          </button>
         </div>
       </div>
 
-      {/* Mobile Horizontal Scrollable Navigation Bar with Synchronized Elastic Indicator */}
-      <div className="md:hidden border-t border-white/[0.06] mt-2 pt-1 pb-1.5 px-4 overflow-x-auto no-scrollbar">
-        <div
-          ref={mobileNavRef}
-          className="relative inline-flex items-center gap-6 text-[13px] font-medium tracking-[0.01em] min-w-max pb-1"
-        >
-          {NAV_ITEMS.map((item) => {
-            const isActive = activeSection === item.id;
-            return (
-              <a
-                key={item.id}
-                ref={(el) => {
-                  if (el) mobileItemRefs.current.set(item.id, el);
-                  else mobileItemRefs.current.delete(item.id);
-                }}
-                href={`#${item.id}`}
-                onClick={(e) => handleNavClick(e, item.id)}
-                aria-current={isActive ? "location" : undefined}
-                className={`py-1 transition-colors duration-200 select-none whitespace-nowrap ${
-                  isActive
-                    ? "text-[#F2F2F0]"
-                    : "text-[#A6A6A3] hover:text-[#F2F2F0]"
-                }`}
-              >
-                {item.label}
-              </a>
-            );
-          })}
-
-          {/* Mobile Sliding Indicator */}
-          <span
-            ref={mobileIndicatorElRef}
-            className="absolute bottom-0 left-0 h-[2px] bg-[#F0A43C] rounded-full pointer-events-none shadow-[0_0_6px_rgba(240,164,60,0.35)] opacity-0"
-            style={{
-              willChange: "transform, width",
-            }}
+      {/* Mobile Slide-Over Navigation Drawer */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          {/* Backdrop overlay */}
+          <div
+            className="fixed inset-0 bg-black/75 backdrop-blur-xs animate-fade-in-overlay"
+            onClick={() => setIsMobileMenuOpen(false)}
             aria-hidden="true"
           />
+
+          {/* Drawer container */}
+          <aside
+            role="dialog"
+            aria-label="Navigation Menu"
+            aria-modal="true"
+            className="fixed top-0 right-0 bottom-0 w-full max-w-[320px] bg-[#0D0E10] border-l border-white/[0.12] z-50 flex flex-col justify-between p-6 shadow-2xl animate-slide-in-right safe-pb safe-pt"
+          >
+            <div>
+              {/* Drawer Header */}
+              <div className="flex items-center justify-between pb-5 border-b border-white/[0.08] mb-6">
+                <Link
+                  href="/"
+                  onClick={(e) => {
+                    handleLogoClick(e);
+                    setIsMobileMenuOpen(false);
+                  }}
+                  className="flex items-center"
+                >
+                  <img
+                    src="/loopforge-logo.png"
+                    alt="LoopForge"
+                    className="h-6 w-auto object-contain"
+                  />
+                </Link>
+
+                <button
+                  ref={closeButtonRef}
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close navigation menu"
+                  className="p-2 -mr-2 rounded-lg text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#181A1D] transition-colors cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Navigation Items */}
+              <nav className="space-y-1.5" aria-label="Mobile Navigation">
+                {NAV_ITEMS.map((item, idx) => {
+                  const isActive = activeSection === item.id;
+                  return (
+                    <a
+                      key={item.id}
+                      href={`#${item.id}`}
+                      onClick={(e) => {
+                        handleNavClick(e, item.id);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`flex items-center justify-between px-3.5 py-3 rounded-xl transition-all cursor-pointer select-none text-[15px] ${
+                        isActive
+                          ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30 shadow-xs"
+                          : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="font-mono text-xs text-[#6B6B6B]">0{idx + 1}</span>
+                        <span>{item.label}</span>
+                      </div>
+                      {isActive && (
+                        <span className="w-2 h-2 rounded-full bg-[#F0A43C] animate-pulse" />
+                      )}
+                    </a>
+                  );
+                })}
+              </nav>
+            </div>
+
+            {/* Bottom Actions inside Drawer */}
+            <div className="space-y-3 pt-6 border-t border-white/[0.08]">
+              <a
+                href="https://github.com"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full flex items-center justify-center gap-2.5 px-4 py-3 rounded-xl border border-white/[0.08] bg-[#111214] hover:bg-[#181A1D] text-[#F2F2F0] text-sm font-medium transition-colors cursor-pointer min-h-[44px]"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                </svg>
+                <span>GitHub Repository</span>
+              </a>
+
+              <Link
+                href="/workspace"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-full flex items-center justify-center gap-2 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-bold px-4 py-3 rounded-xl text-sm transition-all shadow-md active:scale-98 min-h-[44px]"
+              >
+                <span>Start Building</span>
+                <ArrowRight className="w-4 h-4 stroke-[2.5]" />
+              </Link>
+            </div>
+          </aside>
         </div>
-      </div>
+      )}
     </header>
   );
 }

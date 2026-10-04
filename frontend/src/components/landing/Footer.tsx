@@ -79,7 +79,7 @@ export default function Footer() {
     <footer
       ref={footerRef}
       role="contentinfo"
-      className="relative z-10 bg-[#0A0A0B] border-t border-white/[0.08] pt-36 sm:pt-44 lg:pt-48 pb-24 sm:pb-32 overflow-hidden select-none"
+      className="relative z-10 bg-[#0A0A0B] border-t border-white/[0.08] pt-20 sm:pt-36 lg:pt-44 pb-14 sm:pb-24 overflow-hidden select-none safe-pb"
     >
       {/* Subtle peripheral ambient illumination for atmospheric depth */}
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_50%_at_50%_100%,rgba(240,164,60,0.025),transparent)] pointer-events-none" />
@@ -94,7 +94,7 @@ export default function Footer() {
           <a
             href="/"
             onClick={handleScrollToTop}
-            className="inline-block group logo-hover cursor-pointer"
+            className="inline-block group logo-hover cursor-pointer p-2"
             aria-label="LoopForge — Back to Top"
             title="LoopForge — Back to Top"
           >
@@ -110,7 +110,7 @@ export default function Footer() {
         {/* 2. Single Horizontal Navigation Row */}
         <nav
           aria-label="Footer navigation"
-          className={`mt-10 sm:mt-12 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm font-sans text-[#A6A6A3] transition-all duration-700 delay-100 ease-apple ${
+          className={`mt-8 sm:mt-12 flex flex-wrap items-center justify-center gap-x-6 sm:gap-x-8 gap-y-3 text-xs sm:text-sm font-sans text-[#A6A6A3] transition-all duration-700 delay-100 ease-apple ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
           }`}
         >
@@ -121,7 +121,7 @@ export default function Footer() {
                 href={item.href}
                 target="_blank"
                 rel="noreferrer"
-                className="relative py-1 hover:text-[#F2F2F0] transition-colors after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1.5px] after:bg-[#F0A43C] hover:after:w-full after:transition-all after:duration-250 cursor-pointer"
+                className="relative py-1.5 px-1 hover:text-[#F2F2F0] transition-colors after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1.5px] after:bg-[#F0A43C] hover:after:w-full after:transition-all after:duration-250 cursor-pointer min-h-[36px] flex items-center"
               >
                 {item.label}
               </a>
@@ -129,7 +129,7 @@ export default function Footer() {
               <Link
                 key={item.label}
                 href={item.href}
-                className="relative py-1 hover:text-[#F2F2F0] transition-colors after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1.5px] after:bg-[#F0A43C] hover:after:w-full after:transition-all after:duration-250 cursor-pointer"
+                className="relative py-1.5 px-1 hover:text-[#F2F2F0] transition-colors after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1.5px] after:bg-[#F0A43C] hover:after:w-full after:transition-all after:duration-250 cursor-pointer min-h-[36px] flex items-center"
               >
                 {item.label}
               </Link>
@@ -137,7 +137,7 @@ export default function Footer() {
               <a
                 key={item.label}
                 href={item.href}
-                className="relative py-1 hover:text-[#F2F2F0] transition-colors after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1.5px] after:bg-[#F0A43C] hover:after:w-full after:transition-all after:duration-250 cursor-pointer"
+                className="relative py-1.5 px-1 hover:text-[#F2F2F0] transition-colors after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-0 after:h-[1.5px] after:bg-[#F0A43C] hover:after:w-full after:transition-all after:duration-250 cursor-pointer min-h-[36px] flex items-center"
               >
                 {item.label}
               </a>
@@ -145,9 +145,9 @@ export default function Footer() {
           )}
         </nav>
 
-        {/* 3. Social Media Icon Row */}
+        {/* 3. Social Media Icon Row with min 44px touch targets */}
         <div
-          className={`mt-8 sm:mt-10 mb-14 sm:mb-16 flex items-center justify-center gap-3.5 transition-all duration-700 delay-200 ease-apple ${
+          className={`mt-6 sm:mt-10 mb-10 sm:mb-16 flex items-center justify-center gap-3 transition-all duration-700 delay-200 ease-apple ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
           }`}
         >
@@ -158,7 +158,7 @@ export default function Footer() {
               target="_blank"
               rel="noreferrer"
               aria-label={social.name}
-              className="w-9 h-9 rounded-full bg-[#111214] border border-white/[0.08] hover:border-white/[0.18] flex items-center justify-center text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#181A1D] transition-all duration-200 shadow-sm active:scale-95 group cursor-pointer"
+              className="w-11 h-11 rounded-full bg-[#111214] border border-white/[0.08] hover:border-white/[0.18] flex items-center justify-center text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#181A1D] transition-all duration-200 shadow-sm active:scale-95 group cursor-pointer"
             >
               <span className="transition-transform duration-200 group-hover:-translate-y-0.5">
                 {social.icon}
@@ -168,7 +168,7 @@ export default function Footer() {
         </div>
 
         {/* 4. Constrained Editorial Horizontal Divider */}
-        <div className="w-full flex justify-center mb-12 sm:mb-14">
+        <div className="w-full flex justify-center mb-10 sm:mb-14">
           <div
             className={`w-full max-w-lg sm:max-w-xl lg:max-w-2xl h-[1px] bg-gradient-to-r from-transparent via-white/[0.12] to-transparent transition-transform duration-1000 delay-300 ease-out origin-center ${
               isVisible ? "scale-x-100" : "scale-x-0"
@@ -182,7 +182,7 @@ export default function Footer() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
           }`}
         >
-          <p className="font-serif text-2xl sm:text-3xl text-[#F2F2F0] tracking-[-0.01em] font-medium leading-snug">
+          <p className="font-serif text-xl sm:text-3xl text-[#F2F2F0] tracking-[-0.01em] font-medium leading-snug">
             Plan it. Build it. Test it. Fix it.
           </p>
         </div>
@@ -193,13 +193,13 @@ export default function Footer() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
           }`}
         >
-          <div className="text-xs font-mono text-[#6B6B6B] tracking-wide">
+          <div className="text-[11px] sm:text-xs font-mono text-[#6B6B6B] tracking-wide">
             &copy; 2026 LoopForge &middot; AI Software Engineering Assistant
           </div>
 
           {/* Faint Finished Pipeline Telemetry Signature */}
-          <div className="mt-2 flex items-center gap-2 text-[10px] font-mono text-[#404040]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]/80" />
+          <div className="mt-2 flex flex-wrap items-center justify-center gap-2 text-[10px] font-mono text-[#404040]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E]/80 shrink-0" />
             <span>PLAN &middot; ANALYZE &middot; BUILD &middot; TEST &middot; VERIFY</span>
           </div>
         </div>

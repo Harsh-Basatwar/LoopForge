@@ -84,8 +84,8 @@ export default function WorkflowSection() {
           </p>
         </div>
 
-        {/* 5 Connected Stages (Horizontal grid with interactive hover) */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3.5 relative mb-8">
+        {/* 5 Connected Stages (Responsive grid with interactive touch/hover) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 relative mb-8">
           {stages.map((stage, idx) => {
             const Icon = stage.icon;
             const isHovered = activeStage === idx;
@@ -96,9 +96,9 @@ export default function WorkflowSection() {
                 variant="interactive"
                 revealDelay={idx * 70}
                 disabled={isHovered}
-                className={`relative p-5 rounded-xl border transition-all cursor-pointer select-none flex flex-col justify-between ${
+                className={`relative p-5 rounded-xl border transition-all cursor-pointer select-none flex flex-col justify-between min-h-[140px] touch-manipulation ${
                   isHovered
-                    ? `${stage.bgGlow} ${stage.border} shadow-lg shadow-black/50 scale-[1.02]`
+                    ? `${stage.bgGlow} ${stage.border} shadow-lg shadow-black/50 scale-[1.01] sm:scale-[1.02]`
                     : "bg-[#111214] border-white/[0.08] hover:border-white/[0.16]"
                 }`}
                 onClick={() => setActiveStage(idx)}
@@ -125,9 +125,9 @@ export default function WorkflowSection() {
                   {stage.hoverText}
                 </div>
 
-                {/* Arrow connector for desktop */}
+                {/* Arrow connector for large desktop only */}
                 {idx < stages.length - 1 && (
-                  <div className="hidden md:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-20 text-[#6B6B6B]/70 pointer-events-none">
+                  <div className="hidden lg:block absolute -right-3.5 top-1/2 -translate-y-1/2 z-20 text-[#6B6B6B]/70 pointer-events-none">
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 )}

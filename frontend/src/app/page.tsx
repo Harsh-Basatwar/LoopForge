@@ -30,15 +30,16 @@ export default function LandingPage() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
+      const isMobile = window.innerWidth < 768;
       if (scrollY < 650) {
         const progress = Math.min(1, Math.max(0, scrollY / 520));
         setHeroRecede({
-          scale: 1 - progress * 0.08,
+          scale: isMobile ? 1 : 1 - progress * 0.08,
           opacity: 1 - progress * 0.50,
           y: -progress * 20,
         });
         setProductExpand({
-          scale: 1 + progress * 0.045,
+          scale: isMobile ? 1 : 1 + progress * 0.045,
           y: -progress * 14,
           shadowBlur: 20 + progress * 40,
         });
@@ -87,21 +88,23 @@ export default function LandingPage() {
               opacity: heroRecede.opacity,
             }}
           >
-            {/* Editorial Headline with Cormorant Garamond Display & Line-by-Line Reveal */}
-            <h1 className="font-serif font-semibold sm:font-bold text-5xl sm:text-7xl md:text-8xl lg:text-[90px] xl:text-[96px] tracking-[-0.01em] text-[#F2F2F0] max-w-4xl mx-auto leading-[1.02] select-none">
+            {/* Editorial Headline with Cormorant Garamond Display & Deliberate Mobile Line Breaks */}
+            <h1 className="font-serif font-semibold sm:font-bold text-[40px] xs:text-[46px] sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[94px] tracking-[-0.02em] sm:tracking-[-0.01em] text-[#F2F2F0] max-w-4xl mx-auto leading-[1.06] sm:leading-[1.02] select-none">
               <span className="block animate-reveal-1">SHIP SOFTWARE</span>
               <span className="block animate-reveal-2">WITH AN AGENT</span>
-              <span className="block animate-reveal-3">THAT CHECKS ITS WORK.</span>
+              <span className="block sm:hidden animate-reveal-3">THAT CHECKS</span>
+              <span className="block sm:hidden animate-reveal-3">ITS WORK.</span>
+              <span className="hidden sm:block animate-reveal-3">THAT CHECKS ITS WORK.</span>
             </h1>
 
             {/* Subtitle */}
-            <p className="mt-7 text-base sm:text-xl text-[#A6A6A3] max-w-2xl mx-auto leading-relaxed animate-reveal-subtitle">
+            <p className="mt-5 sm:mt-7 text-[15px] sm:text-xl text-[#A6A6A3] max-w-2xl mx-auto leading-relaxed px-2 animate-reveal-subtitle">
               Plan, analyze, implement, test, debug, and refine software tasks through an autonomous
               LangGraph workflow.
             </p>
 
-            {/* Hero CTAs */}
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-4 animate-reveal-hero-cta">
+            {/* Hero CTAs - Mobile-first stacked layout expanding to row on desktop */}
+            <div className="mt-7 sm:mt-8 w-full max-w-xs sm:max-w-none mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 animate-reveal-hero-cta">
               <Link
                 href="/workspace"
                 onMouseMove={handleBtnMouseMove}
@@ -109,7 +112,7 @@ export default function LandingPage() {
                 style={{
                   transform: `translate(${btnOffset.x}px, ${btnOffset.y}px)`,
                 }}
-                className="flex items-center gap-2 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-bold px-7 py-3 rounded-xl text-sm transition-all shadow-md active:scale-95 cursor-pointer group"
+                className="flex items-center justify-center gap-2 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-bold px-7 py-3 rounded-xl text-sm transition-all shadow-md active:scale-95 cursor-pointer group min-h-[48px] touch-target"
               >
                 <span>START BUILDING</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5] group-hover:translate-x-1 transition-transform" />
@@ -117,7 +120,7 @@ export default function LandingPage() {
 
               <a
                 href="#workflow"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] font-medium text-sm transition-all cursor-pointer"
+                className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] font-medium text-sm transition-all cursor-pointer min-h-[44px] touch-target"
               >
                 <span>EXPLORE THE WORKFLOW</span>
               </a>
@@ -126,7 +129,7 @@ export default function LandingPage() {
 
           {/* 03. Expanding Hero Asset: Live Miniature Workspace Simulation */}
           <div
-            className="mt-14 animate-reveal-hero-viz transition-transform duration-150 ease-out"
+            className="mt-10 sm:mt-14 animate-reveal-hero-viz transition-transform duration-150 ease-out w-full"
             style={{
               transform: `scale(${productExpand.scale}) translateY(${productExpand.y}px)`,
               filter: `drop-shadow(0 20px ${productExpand.shadowBlur}px rgba(0,0,0,0.6))`,

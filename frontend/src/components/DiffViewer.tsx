@@ -147,19 +147,19 @@ export default function DiffViewer({
       </div>
 
       {/* Human Approval Action Bar */}
-      <div className="p-3.5 bg-[#0A0A0B] border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+      <div className="p-3.5 bg-[#0A0A0B] border-t border-white/[0.08] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="text-xs sm:text-sm text-[#A6A6A3] flex items-center gap-2">
           <span>Status: </span>
           <span className="text-[#F2F2F0] font-semibold uppercase">{taskStatus.replace("_", " ")}</span>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
           {onCancel && taskStatus !== "completed" && taskStatus !== "cancelled" && (
             <button
               type="button"
               onClick={onCancel}
               disabled={isProcessing}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-white/[0.08] hover:bg-[#111214] text-[#A6A6A3] hover:text-[#F2F2F0] text-xs sm:text-sm transition-colors cursor-pointer"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-lg border border-white/[0.08] hover:bg-[#111214] text-[#A6A6A3] hover:text-[#F2F2F0] text-xs sm:text-sm transition-colors cursor-pointer min-h-[44px]"
             >
               <Ban className="w-4 h-4" />
               Cancel Task
@@ -171,7 +171,7 @@ export default function DiffViewer({
               type="button"
               onClick={onReject}
               disabled={isProcessing}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#EF4444]/30 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] text-xs sm:text-sm transition-colors cursor-pointer font-medium"
+              className="flex-1 sm:flex-initial flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-lg border border-[#EF4444]/30 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] text-xs sm:text-sm transition-colors cursor-pointer font-medium min-h-[44px]"
             >
               <XCircle className="w-4 h-4" />
               Reject Changes
@@ -183,7 +183,7 @@ export default function DiffViewer({
               type="button"
               onClick={onApprove}
               disabled={isProcessing}
-              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#0A0A0B] font-semibold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
+              className="w-full sm:w-auto flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#0A0A0B] font-semibold text-xs sm:text-sm transition-all shadow-sm cursor-pointer min-h-[44px]"
             >
               <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
               Approve & Apply Changes

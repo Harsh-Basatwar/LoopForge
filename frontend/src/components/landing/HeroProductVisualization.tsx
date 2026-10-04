@@ -133,8 +133,10 @@ export default function HeroProductVisualization() {
     return () => clearInterval(stepInterval);
   }, [currentIdx]);
 
-  // Subtle mouse perspective depth on desktop
+  // Subtle mouse perspective depth on desktop only (disabled on touch devices)
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(pointer: fine)").matches || window.innerWidth < 1024) return;
     if (!containerRef.current) return;
     const rect = containerRef.current.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
@@ -158,7 +160,10 @@ export default function HeroProductVisualization() {
       onMouseLeave={handleMouseLeave}
       className="w-full max-w-5xl mx-auto rounded-xl border border-white/[0.08] bg-[#111214] shadow-2xl overflow-hidden text-left font-sans select-none transition-transform duration-300 ease-out"
       style={{
-        transform: `perspective(1200px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
+        transform:
+          tilt.rotateX === 0 && tilt.rotateY === 0
+            ? "none"
+            : `perspective(1200px) rotateX(${tilt.rotateX}deg) rotateY(${tilt.rotateY}deg)`,
       }}
     >
       {/* Top Application Bar */}
@@ -210,10 +215,10 @@ export default function HeroProductVisualization() {
         </div>
       </div>
 
-      {/* Main 3-Column Mini Workspace */}
-      <div className="grid grid-cols-1 md:grid-cols-12 min-h-[380px]">
+      {/* DESKTOP: 3-Column Mini Workspace (lg+) */}
+      <div className="hidden lg:grid grid-cols-12 min-h-[380px]">
         {/* Left Column: Repository Tree (3 cols) */}
-        <div className="md:col-span-3 border-r border-white/[0.08] bg-[#0A0A0B]/70 p-3 hidden md:flex flex-col justify-between">
+        <div className="lg:col-span-3 border-r border-white/[0.08] bg-[#0A0A0B]/70 p-3 flex flex-col justify-between">
           <div>
             <div className="text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-2 font-semibold">
               Repository
@@ -248,7 +253,7 @@ export default function HeroProductVisualization() {
         </div>
 
         {/* Center Column: Task, Activity & Code Viewer (6 cols) */}
-        <div className="md:col-span-6 p-4 flex flex-col justify-between border-b md:border-b-0 md:border-r border-white/[0.08] bg-[#111214]">
+        <div className="lg:col-span-6 p-4 flex flex-col justify-between border-r border-white/[0.08] bg-[#111214]">
           {/* Task Description */}
           <div>
             <div className="flex items-center justify-between text-xs pb-2 border-b border-white/[0.08] mb-3">
@@ -271,7 +276,7 @@ export default function HeroProductVisualization() {
               <span>src/auth/service.py</span>
               <span className="text-[#F0A43C] font-semibold">{current.stage}</span>
             </div>
-            <pre className="text-[#F2F2F0]/90 overflow-x-auto leading-relaxed whitespace-pre font-mono text-[11px]">
+            <pre className="text-[#F2F2F0]/90 overflow-x-auto leading-relaxed whitespace-pre font-mono text-[11px] local-scroll">
               {current.codeSnippet}
             </pre>
           </div>
@@ -284,7 +289,7 @@ export default function HeroProductVisualization() {
         </div>
 
         {/* Right Column: Agent Workflow State & Test Outcome (3 cols) */}
-        <div className="md:col-span-3 p-3 bg-[#0D0E10] flex flex-col justify-between">
+        <div className="lg:col-span-3 p-3 bg-[#0D0E10] flex flex-col justify-between">
           <div>
             <div className="text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-2.5 font-semibold">
               Agent State
@@ -350,6 +355,109 @@ export default function HeroProductVisualization() {
                 <span className="text-[10px] font-mono text-[#6B6B6B]">PENDING</span>
               )}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MOBILE & TABLET: Native Vertically Stacked Architecture (< lg) */}
+      <div className="lg:hidden flex flex-col p-3.5 sm:p-4 space-y-3 bg-[#111214]">
+        {/* 1. Active Task Header & Iteration */}
+        <div className="flex items-start justify-between gap-2 pb-2.5 border-b border-white/[0.08]">
+          <div>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#A6A6A3]">Active Task</span>
+            <div className="text-sm font-semibold text-[#F2F2F0] leading-snug mt-0.5">
+              Add JWT authentication to FastAPI service
+            </div>
+          </div>
+          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181A1D] text-[#F6D58A] border border-white/[0.08] shrink-0 font-medium">
+            Iter {current.iteration}/3
+          </span>
+        </div>
+
+        {/* 2. Autonomous Agent Stepper Pipeline */}
+        <div>
+          <div className="text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-1.5 font-semibold">
+            Pipeline Progression
+          </div>
+          <div className="grid grid-cols-5 gap-1 font-mono text-[11px]">
+            {[
+              { id: "planner", label: "Plan" },
+              { id: "analyzer", label: "Analyze" },
+              { id: "coder", label: "Code" },
+              { id: "tester", label: "Test" },
+              { id: "reflector", label: "Reflect" },
+            ].map((node) => {
+              const isActive = current.activeNode === node.id;
+              const isPast =
+                current.activeNode === "completed" ||
+                (node.id === "planner" && current.activeNode !== "planner") ||
+                (node.id === "analyzer" && !["planner", "analyzer"].includes(current.activeNode));
+
+              return (
+                <div
+                  key={node.id}
+                  className={`flex flex-col items-center py-1.5 px-1 rounded border text-center transition-all ${
+                    isActive
+                      ? "bg-[#F0A43C]/15 border-[#F0A43C]/60 text-[#F0A43C] font-semibold"
+                      : isPast
+                      ? "bg-[#22C55E]/10 border-[#22C55E]/30 text-[#22C55E]"
+                      : "bg-[#0D0E10] border-white/[0.06] text-[#6B6B6B]"
+                  }`}
+                >
+                  <span className="text-[10px]">{node.label}</span>
+                  <span className="mt-0.5">
+                    {isActive ? (
+                      <Loader2 className="w-2.5 h-2.5 text-[#F0A43C] animate-spin" />
+                    ) : isPast ? (
+                      <Check className="w-2.5 h-2.5 text-[#22C55E] stroke-[2.5]" />
+                    ) : (
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#404040]" />
+                    )}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 3. Code & Result Viewer (Local Horizontal Scroll) */}
+        <div className="rounded-lg border border-white/[0.08] bg-[#0D0E10] p-3 font-mono text-xs">
+          <div className="flex items-center justify-between text-[10px] text-[#6B6B6B] pb-1.5 border-b border-white/[0.08] mb-2">
+            <span>src/auth/service.py</span>
+            <span className="text-[#F0A43C] font-semibold">{current.stage}</span>
+          </div>
+          <pre className="text-[#F2F2F0]/90 overflow-x-auto leading-relaxed whitespace-pre font-mono text-[11px] sm:text-xs local-scroll py-0.5">
+            {current.codeSnippet}
+          </pre>
+        </div>
+
+        {/* 4. Test Verification & Live Telemetry */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {/* Test Outcome Badge */}
+          <div className="p-2.5 rounded-lg border border-white/[0.08] bg-[#0A0A0B] flex items-center justify-between font-mono text-xs">
+            <span className="text-[#A6A6A3] text-[11px]">
+              Tests: <strong className="text-[#F2F2F0]">{animatedPassed} passed</strong>
+              {animatedFailed > 0 && <span className="text-[#EF4444] ml-1">({animatedFailed} failed)</span>}
+            </span>
+            {current.testOutcome.status === "passed" && (
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#22C55E]/15 text-[#22C55E] border border-[#22C55E]/30 font-semibold">
+                PASSED ✓
+              </span>
+            )}
+            {current.testOutcome.status === "failed" && (
+              <span className="text-[10px] px-2 py-0.5 rounded bg-[#EF4444]/15 text-[#EF4444] border border-[#EF4444]/30 font-semibold">
+                REFLECT ↺
+              </span>
+            )}
+            {current.testOutcome.status === "idle" && (
+              <span className="text-[10px] text-[#6B6B6B]">PENDING</span>
+            )}
+          </div>
+
+          {/* Activity Notice */}
+          <div className="flex items-center gap-2 p-2.5 rounded-lg bg-[#181A1D] border border-white/[0.08] text-xs font-mono">
+            <div className="w-2 h-2 rounded-full bg-[#F0A43C] animate-pulse shrink-0" />
+            <span className="text-[#F2F2F0] text-[11px] truncate">{current.activityMsg}</span>
           </div>
         </div>
       </div>

@@ -11,6 +11,7 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronRight,
+  X,
 } from "lucide-react";
 
 interface SidebarProps {
@@ -82,16 +83,34 @@ export default function Sidebar({
       {/* Mobile Backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/60 z-30 lg:hidden backdrop-blur-xs"
+          className="fixed inset-0 bg-black/75 z-40 lg:hidden backdrop-blur-xs"
           onClick={onClose}
+          aria-hidden="true"
         />
       )}
 
       <aside
-        className={`fixed lg:static top-0 bottom-0 left-0 z-40 w-64 md:w-68 bg-[#0A0A0B] border-r border-white/[0.08] flex flex-col transition-transform duration-200 select-none ${
+        className={`fixed lg:static top-0 bottom-0 left-0 z-50 w-72 sm:w-80 lg:w-64 md:lg:w-68 bg-[#0A0A0B] border-r border-white/[0.08] flex flex-col transition-transform duration-200 select-none shadow-2xl safe-pb ${
           isOpen ? "translate-x-0" : "-translate-x-full lg:hidden"
         }`}
       >
+        {/* Mobile Header with Close Button (< 1024px) */}
+        <div className="lg:hidden flex items-center justify-between p-3.5 border-b border-white/[0.08] bg-[#0D0E10]">
+          <div className="flex items-center gap-2">
+            <FolderGit2 className="w-4 h-4 text-[#F6D58A]" />
+            <span className="font-semibold text-sm text-[#F2F2F0] truncate max-w-[180px]">
+              {currentProject?.name || "Workspace"}
+            </span>
+          </div>
+          <button
+            onClick={onClose}
+            className="w-8 h-8 flex items-center justify-center text-[#8C8C88] hover:text-[#F2F2F0] rounded-lg hover:bg-[#181A1D] cursor-pointer"
+            aria-label="Close sidebar"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+
         {/* Top Action: New Task */}
         <div className="p-3.5 border-b border-white/[0.08]">
           <button
@@ -99,7 +118,7 @@ export default function Sidebar({
               onNewTask();
               if (window.innerWidth < 1024) onClose();
             }}
-            className="w-full flex items-center justify-center gap-2.5 bg-[#111214] hover:bg-[#181A1D] text-[#F2F2F0] hover:text-white border border-white/[0.08] hover:border-white/[0.14] py-2.5 px-3.5 rounded-lg text-sm sm:text-[15px] font-medium transition-all shadow-xs group cursor-pointer"
+            className="w-full flex items-center justify-center gap-2.5 bg-[#111214] hover:bg-[#181A1D] text-[#F2F2F0] hover:text-white border border-white/[0.08] hover:border-white/[0.14] py-2.5 px-3.5 rounded-lg text-sm sm:text-[15px] font-medium transition-all shadow-xs group cursor-pointer min-h-[44px]"
           >
             <Plus className="w-4 h-4 text-[#F0A43C] group-hover:scale-110 transition-transform" />
             <span>New Task</span>

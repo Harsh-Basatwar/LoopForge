@@ -60,12 +60,13 @@ export default function AppHeader({
 
   const currentProject = projects.find((p) => p.id === selectedProjectId);
 
-  // Dynamic Anchor-Based Popover Positioning
-  // Ensures the Project Switcher opens cleanly shifted toward the Main Content Area,
-  // completely clear of the left sidebar controls (New Task, Project, Repo files).
   const calculatePosition = () => {
-    if (!projectTriggerRef.current) return { top: 54, left: 284 };
+    if (!projectTriggerRef.current) return { top: 54, left: 12 };
     const rect = projectTriggerRef.current.getBoundingClientRect();
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    if (isMobile) {
+      return { top: rect.bottom + 6, left: 12 };
+    }
     const sidebarEl = typeof document !== "undefined" ? document.querySelector("aside") : null;
     const sidebarRect = sidebarEl?.getBoundingClientRect();
     const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
@@ -76,7 +77,7 @@ export default function AppHeader({
         ? 272
         : 0;
 
-    const popoverWidth = 275;
+    const popoverWidth = 280;
     const minLeft = sidebarRight > 0 ? sidebarRight + 12 : rect.left;
     let left = Math.max(rect.right - 90, minLeft);
     const maxLeft = typeof window !== "undefined" ? window.innerWidth - popoverWidth - 12 : 300;
@@ -190,12 +191,12 @@ export default function AppHeader({
             aria-expanded={isProjectDropdownOpen}
             aria-haspopup="true"
             aria-label="Select active project"
-            className={`flex items-center gap-2 text-sm sm:text-[15px] text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+            className={`flex items-center gap-1.5 sm:gap-2 text-xs sm:text-[15px] text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-2.5 sm:px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
               isProjectDropdownOpen ? "border-[#F0A43C]/40 bg-[#181A1D]" : ""
             }`}
           >
-            <FolderGit2 className="w-4 h-4 text-[#F6D58A]" />
-            <span className="font-medium max-w-[150px] truncate">
+            <FolderGit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#F6D58A] shrink-0" />
+            <span className="font-medium max-w-[80px] sm:max-w-[150px] truncate">
               {currentProject ? currentProject.name : "Select Project"}
             </span>
             <ChevronDown
@@ -218,7 +219,7 @@ export default function AppHeader({
               <div
                 role="dialog"
                 aria-label="Active Projects"
-                className="fixed z-50 w-[300px] bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl py-2 text-sm animate-popover-in backdrop-blur-md"
+                className="fixed z-50 w-[calc(100vw-24px)] max-w-xs sm:w-[300px] bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl py-2 text-sm animate-popover-in backdrop-blur-md"
                 style={{
                   top: `${(popoverPosition || calculatePosition()).top}px`,
                   left: `${(popoverPosition || calculatePosition()).left}px`,
