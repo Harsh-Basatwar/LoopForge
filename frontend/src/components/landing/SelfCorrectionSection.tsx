@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { RotateCw, AlertTriangle, Lightbulb, Code2, CheckCircle2 } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function SelfCorrectionSection() {
   const [activeCycle, setActiveCycle] = useState(0);
@@ -55,7 +56,7 @@ export default function SelfCorrectionSection() {
   const current = cycleSteps[activeCycle];
 
   return (
-    <section id="self-correction" className="py-24 border-b border-white/[0.08] bg-transparent relative overflow-hidden">
+    <section id="self-correction" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
@@ -73,7 +74,7 @@ export default function SelfCorrectionSection() {
         </div>
 
         {/* Technical Curved Loop Visualization with Animated SVG Beam */}
-        <div className="mb-12 p-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl relative overflow-hidden">
+        <InteractiveCard variant="spotlight" className="mb-12 p-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl relative overflow-hidden hover:border-white/[0.14]">
           <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6 font-mono text-xs">
             <span className="text-[#6B6B6B] uppercase font-semibold">Cyclic State Machine</span>
             <span className="text-[#F6D58A] flex items-center gap-1.5">
@@ -99,6 +100,14 @@ export default function SelfCorrectionSection() {
                 strokeWidth="2"
                 className="animate-beam"
               />
+              {/* Traveling Signal Pulse Particle */}
+              <circle r="3.5" fill="#F0A43C" opacity="0.95">
+                <animateMotion
+                  path="M 100 20 L 300 20 L 500 20 L 700 20 C 760 20, 760 -10, 400 -10 C 140 -10, 140 20, 100 20"
+                  dur="3.6s"
+                  repeatCount="indefinite"
+                />
+              </circle>
             </svg>
           </div>
 
@@ -126,7 +135,7 @@ export default function SelfCorrectionSection() {
               );
             })}
           </div>
-        </div>
+        </InteractiveCard>
 
         {/* 4 Interactive Step Buttons */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 mb-6">
@@ -135,9 +144,10 @@ export default function SelfCorrectionSection() {
             const Icon = step.icon;
 
             return (
-              <button
+              <InteractiveCard
                 key={step.id}
-                type="button"
+                variant="interactive"
+                revealDelay={idx * 70}
                 onClick={() => setActiveCycle(idx)}
                 className={`p-4 rounded-xl border text-left transition-all cursor-pointer ${
                   isSelected
@@ -173,13 +183,13 @@ export default function SelfCorrectionSection() {
                   <Icon className="w-4 h-4 text-[#F2F2F0] shrink-0" />
                   <span className="text-xs font-bold text-[#F2F2F0] font-sans truncate">{step.title}</span>
                 </div>
-              </button>
+              </InteractiveCard>
             );
           })}
         </div>
 
         {/* Code Inspection & Diagnostic Window */}
-        <div className="rounded-xl border border-white/[0.08] bg-[#111214] p-6 shadow-2xl">
+        <InteractiveCard variant="tilt" className="rounded-xl border border-white/[0.08] bg-[#111214] p-6 shadow-2xl hover:border-white/[0.14]">
           <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4 font-mono text-xs">
             <span className="text-[#F2F2F0] font-medium">{current.title}</span>
             <span className="text-[#A6A6A3] text-[11px]">{current.note}</span>
@@ -187,7 +197,7 @@ export default function SelfCorrectionSection() {
           <pre className="p-4 rounded-lg bg-[#0D0E10] border border-white/[0.08] text-xs font-mono text-[#F2F2F0] overflow-x-auto leading-relaxed whitespace-pre select-text">
             {current.code}
           </pre>
-        </div>
+        </InteractiveCard>
       </div>
     </section>
   );

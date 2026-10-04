@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { FileCode2, Check, AlertCircle, Play, FlaskConical } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function CodeDiffSection() {
   const [hoveredLine, setHoveredLine] = useState<number | null>(null);
@@ -22,7 +23,7 @@ export default function CodeDiffSection() {
   ];
 
   return (
-    <section id="diff-engine" className="py-24 border-b border-white/[0.08] bg-transparent relative">
+    <section id="diff-engine" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-16">
@@ -41,7 +42,7 @@ export default function CodeDiffSection() {
         {/* 2-Column Grid: Code Editor (7 cols) + Test Runner (5 cols) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Left Column: Code Editor & Unified Diff (7 cols) */}
-          <div className="lg:col-span-7 rounded-xl border border-white/[0.08] bg-[#111214] overflow-hidden flex flex-col justify-between shadow-2xl">
+          <InteractiveCard variant="tilt" className="lg:col-span-7 rounded-xl border border-white/[0.08] bg-[#111214] overflow-hidden flex flex-col justify-between shadow-2xl hover:border-white/[0.14]">
             <div className="h-10 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex items-center justify-between font-mono text-xs">
               <div className="flex items-center gap-2 text-[#F2F2F0]">
                 <FileCode2 className="w-3.5 h-3.5 text-[#F0A43C]" />
@@ -93,10 +94,10 @@ export default function CodeDiffSection() {
               <span>Review: Hover line for rationale</span>
               <span className="text-[#22C55E] font-semibold">[ Diff Validated ]</span>
             </div>
-          </div>
+          </InteractiveCard>
 
           {/* Right Column: Sandboxed Test Runner (5 cols) */}
-          <div className="lg:col-span-5 rounded-xl border border-white/[0.08] bg-[#111214] p-6 flex flex-col justify-between shadow-2xl">
+          <InteractiveCard variant="spotlight" revealDelay={100} className="lg:col-span-5 rounded-xl border border-white/[0.08] bg-[#111214] p-6 flex flex-col justify-between shadow-2xl hover:border-white/[0.14]">
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-5 font-mono text-xs">
                 <div>
@@ -161,7 +162,7 @@ export default function CodeDiffSection() {
               <span>Execution: Subprocess Sandbox</span>
               <span className="text-[#F2F2F0]">Exit Code: {testState === "failed" ? "1" : "0"}</span>
             </div>
-          </div>
+          </InteractiveCard>
         </div>
       </div>
     </section>

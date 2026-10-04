@@ -15,14 +15,18 @@ const geistMono = Geist_Mono({
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant",
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["400", "500", "600", "700"],
   display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "AI Software Engineering Assistant — Autonomous Coding Agent",
+  title: "LoopForge — AI Software Engineering Assistant",
   description:
-    "An autonomous developer agent built with LangGraph that plans, indexes repositories, writes unified diffs, runs test suites, and self-corrects until verified.",
+    "LoopForge is an autonomous developer agent built with LangGraph that plans, indexes repositories, writes unified diffs, runs test suites, and self-corrects until verified.",
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-icon.png",
+  },
 };
 
 export default function RootLayout({
@@ -35,7 +39,7 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${cormorantGaramond.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-serif">{children}</body>
     </html>
   );
 }

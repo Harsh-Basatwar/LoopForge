@@ -142,14 +142,14 @@ export default function WorkflowVisualizer({ task, activeNode, onSelectNode }: P
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-semibold text-[#F2F2F0]">{n.label}</span>
+                      <span className="text-sm font-semibold text-[#F2F2F0]">{n.label}</span>
                       {n.id === "reflector" && (
-                        <span className="text-[10px] font-mono text-[#F6D58A] flex items-center gap-0.5">
+                        <span className="text-xs text-[#F6D58A] flex items-center gap-0.5">
                           <RotateCw className="w-2.5 h-2.5" /> loop
                         </span>
                       )}
                     </div>
-                    <p className="text-[11px] text-[#A6A6A3] leading-tight">{n.desc}</p>
+                    <p className="text-xs text-[#A6A6A3] leading-normal mt-0.5">{n.desc}</p>
                   </div>
                 </div>
 
@@ -178,10 +178,10 @@ export default function WorkflowVisualizer({ task, activeNode, onSelectNode }: P
 
               {/* Node detail drawer when clicked */}
               {isSelected && (
-                <div className="mt-1.5 p-3 rounded-lg bg-[#0D0E10] border border-white/[0.08] text-xs font-mono text-[#F2F2F0]/90">
-                  <div className="flex items-center justify-between text-[11px] text-[#A6A6A3] border-b border-white/[0.08] pb-1.5 mb-2">
-                    <span>Node ID: {n.id}</span>
-                    <span className="uppercase text-[10px] text-[#F0A43C]">{n.status}</span>
+                <div className="mt-1.5 p-3 rounded-lg bg-[#0D0E10] border border-white/[0.08] text-xs text-[#F2F2F0]/90">
+                  <div className="flex items-center justify-between text-xs text-[#A6A6A3] border-b border-white/[0.08] pb-1.5 mb-2">
+                    <span>Node ID: <code className="font-mono text-[11px] text-[#F2F2F0]">{n.id}</code></span>
+                    <span className="uppercase text-[11px] text-[#F0A43C] font-semibold">{n.status}</span>
                   </div>
                   {n.id === "planner" && task?.plan && (
                     <div>
@@ -197,7 +197,7 @@ export default function WorkflowVisualizer({ task, activeNode, onSelectNode }: P
                     <div>
                       <p className="text-[#A6A6A3] mb-1">Files Changed:</p>
                       {task.generated_changes.map((c, cIdx) => (
-                        <div key={cIdx} className="text-[#F0A43C]">
+                        <div key={cIdx} className="text-[#F0A43C] font-mono text-[11px]">
                           {c.change_type.toUpperCase()}: {c.path}
                         </div>
                       ))}
@@ -215,7 +215,7 @@ export default function WorkflowVisualizer({ task, activeNode, onSelectNode }: P
                   {n.id === "reflector" && task?.errors && (
                     <div>
                       <p className="text-[#A6A6A3] mb-1">Diagnoses recorded: {task.errors.length}</p>
-                      <div className="text-[#F6D58A] text-[11px]">
+                      <div className="text-[#F6D58A] font-mono text-[11px]">
                         {task.errors[task.errors.length - 1] || "No failure recorded"}
                       </div>
                     </div>

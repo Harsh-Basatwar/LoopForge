@@ -99,7 +99,13 @@ export function subscribeToEvents(
 
   eventSource.onmessage = (e) => {
     try {
-      const data = JSON.parse(e.data);
+      let raw = e.data;
+      if (typeof raw === "string") {
+        if (raw.startsWith("data: ")) {
+          raw = raw.slice(6);
+        }
+      }
+      const data = JSON.parse(raw);
       onEvent(data);
     } catch (err) {
       console.error("Failed to parse SSE event", err);

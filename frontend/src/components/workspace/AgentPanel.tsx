@@ -81,32 +81,32 @@ export default function AgentPanel({
   return (
     <aside className="w-80 md:w-96 bg-[#0A0A0B] border-l border-white/[0.08] flex flex-col shrink-0 select-none z-20">
       {/* Top Tab Bar & Close Action */}
-      <div className="h-11 border-b border-white/[0.08] px-2 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-1 overflow-x-auto text-xs font-mono">
+      <div className="h-12 border-b border-white/[0.08] px-2.5 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-1.5 overflow-x-auto text-sm font-medium">
           <button
             onClick={() => onTabChange("agent")}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 cursor-pointer ${
               activeTab === "agent"
-                ? "bg-[#181A1D] text-[#F0A43C] font-medium border border-[#F0A43C]/30"
+                ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
                 : "text-[#A6A6A3] hover:text-[#F2F2F0]"
             }`}
           >
-            <Activity className="w-3.5 h-3.5" />
+            <Activity className="w-4 h-4" />
             <span>Agent</span>
           </button>
 
           <button
             onClick={() => onTabChange("diff")}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 cursor-pointer ${
               activeTab === "diff"
-                ? "bg-[#181A1D] text-[#F0A43C] font-medium border border-[#F0A43C]/30"
+                ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
                 : "text-[#A6A6A3] hover:text-[#F2F2F0]"
             }`}
           >
-            <FileDiff className="w-3.5 h-3.5" />
+            <FileDiff className="w-4 h-4" />
             <span>Changes</span>
             {activeTask && activeTask.generated_changes.length > 0 && (
-              <span className="text-[10px] text-[#F0A43C] font-bold">
+              <span className="text-xs text-[#F0A43C] font-bold">
                 ({activeTask.generated_changes.length})
               </span>
             )}
@@ -114,36 +114,36 @@ export default function AgentPanel({
 
           <button
             onClick={() => onTabChange("tests")}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 cursor-pointer ${
               activeTab === "tests"
-                ? "bg-[#181A1D] text-[#F0A43C] font-medium border border-[#F0A43C]/30"
+                ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
                 : "text-[#A6A6A3] hover:text-[#F2F2F0]"
             }`}
           >
-            <Terminal className="w-3.5 h-3.5" />
+            <Terminal className="w-4 h-4" />
             <span>Tests</span>
           </button>
 
           <button
             onClick={() => onTabChange("files")}
-            className={`px-2.5 py-1 rounded-md transition-colors flex items-center gap-1.5 ${
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-2 cursor-pointer ${
               activeTab === "files"
-                ? "bg-[#181A1D] text-[#F0A43C] font-medium border border-[#F0A43C]/30"
+                ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
                 : "text-[#A6A6A3] hover:text-[#F2F2F0]"
             }`}
           >
-            <FolderTree className="w-3.5 h-3.5" />
+            <FolderTree className="w-4 h-4" />
             <span>Files</span>
           </button>
         </div>
 
         <button
           onClick={onClose}
-          className="p-1 text-[#6B6B6B] hover:text-[#F2F2F0] rounded hover:bg-[#111214] transition-colors"
+          className="p-1.5 text-[#8C8C88] hover:text-[#F2F2F0] rounded-lg hover:bg-[#111214] transition-colors cursor-pointer"
           title="Close panel"
           aria-label="Close right panel"
         >
-          <X className="w-3.5 h-3.5" />
+          <X className="w-4 h-4" />
         </button>
       </div>
 
@@ -151,15 +151,15 @@ export default function AgentPanel({
       <div className="flex-1 overflow-y-auto">
         {/* AGENT TAB */}
         {activeTab === "agent" && (
-          <div className="p-4 space-y-5">
+          <div className="p-4 sm:p-5 space-y-6">
             {/* Agent State Machine Nodes */}
-            <div className="bg-[#111214] border border-white/[0.08] rounded-xl p-3.5 space-y-3">
-              <div className="flex items-center justify-between text-xs border-b border-white/[0.08] pb-2 font-mono">
-                <span className="text-[#A6A6A3] uppercase text-[10px] tracking-wider">
+            <div className="bg-[#111214] border border-white/[0.08] rounded-xl p-4 space-y-3.5 shadow-sm">
+              <div className="flex items-center justify-between text-sm border-b border-white/[0.08] pb-2.5 font-medium">
+                <span className="text-[#8C8C88] uppercase text-[13px] tracking-wider font-semibold">
                   Autonomous Pipeline
                 </span>
                 {activeTask && (
-                  <span className="text-[#6B6B6B] text-[11px]">
+                  <span className="text-[#8C8C88] text-xs sm:text-[13px]">
                     Iteration {activeTask.iteration}/{activeTask.max_iterations}
                   </span>
                 )}
@@ -171,22 +171,22 @@ export default function AgentPanel({
                   return (
                     <div
                       key={n.id}
-                      className="flex items-center justify-between text-xs py-1 px-2 rounded bg-[#0D0E10] border border-white/[0.06]"
+                      className="flex items-center justify-between text-sm py-2 px-3 rounded-lg bg-[#0D0E10] border border-white/[0.06]"
                     >
-                      <span className="text-[#F2F2F0] font-mono text-[11px]">
+                      <span className="text-[#F2F2F0] text-[15px] sm:text-base font-medium">
                         {n.label}
                       </span>
-                      <div className="flex items-center gap-1.5">
+                      <div className="flex items-center gap-2">
                         {getNodeIcon(state)}
                         <span
-                          className={`text-[10px] font-mono capitalize ${
+                          className={`text-xs sm:text-[13px] capitalize font-medium ${
                             state === "completed"
                               ? "text-[#22C55E]"
                               : state === "running"
                               ? "text-[#F0A43C]"
                               : state === "failed"
                               ? "text-[#EF4444]"
-                              : "text-[#6B6B6B]"
+                              : "text-[#8C8C88]"
                           }`}
                         >
                           {state}
@@ -199,37 +199,37 @@ export default function AgentPanel({
 
               {/* Checkpoint actions in Agent Tab */}
               {activeTask?.status === "awaiting_plan_approval" && (
-                <div className="pt-2 border-t border-white/[0.08] space-y-2">
-                  <div className="text-[11px] text-[#F6D58A] font-mono">
+                <div className="pt-3 border-t border-white/[0.08] space-y-2.5">
+                  <div className="text-sm text-[#F6D58A] font-medium">
                     Plan requires approval before starting
                   </div>
                   <button
                     onClick={onApprovePlan}
-                    className="w-full bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-semibold py-1.5 px-3 rounded-lg text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-semibold py-2 px-3 rounded-lg text-sm sm:text-[15px] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm"
                   >
-                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                    <Check className="w-4 h-4 stroke-[2.5]" />
                     <span>Approve Plan</span>
                   </button>
                 </div>
               )}
 
               {activeTask?.status === "awaiting_approval" && (
-                <div className="pt-2 border-t border-white/[0.08] space-y-2">
-                  <div className="text-[11px] text-[#F6D58A] font-mono">
+                <div className="pt-3 border-t border-white/[0.08] space-y-2.5">
+                  <div className="text-sm text-[#F6D58A] font-medium">
                     {activeTask.generated_changes.length} files modified & tested
                   </div>
                   <div className="flex gap-2">
                     <button
                       onClick={onRejectChanges}
-                      className="flex-1 bg-[#0D0E10] hover:bg-[#181A1D] text-[#A6A6A3] hover:text-[#F2F2F0] py-1.5 px-2 rounded-lg text-xs font-mono border border-white/[0.08] cursor-pointer"
+                      className="flex-1 bg-[#0D0E10] hover:bg-[#181A1D] text-[#A6A6A3] hover:text-[#F2F2F0] py-2 px-3 rounded-lg text-sm font-medium border border-white/[0.08] cursor-pointer"
                     >
                       Reject
                     </button>
                     <button
                       onClick={onApproveChanges}
-                      className="flex-1 bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#0A0A0B] font-semibold py-1.5 px-2 rounded-lg text-xs transition-all flex items-center justify-center gap-1 cursor-pointer"
+                      className="flex-1 bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#0A0A0B] font-semibold py-2 px-3 rounded-lg text-sm transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm"
                     >
-                      <Check className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <Check className="w-4 h-4 stroke-[2.5]" />
                       <span>Accept</span>
                     </button>
                   </div>
@@ -238,32 +238,32 @@ export default function AgentPanel({
             </div>
 
             {/* Real-time Activity Timeline */}
-            <div className="bg-[#111214] border border-white/[0.08] rounded-xl p-3.5 space-y-2.5">
-              <div className="flex items-center justify-between text-xs border-b border-white/[0.08] pb-2 font-mono">
-                <span className="text-[#A6A6A3] uppercase text-[10px] tracking-wider">
+            <div className="bg-[#111214] border border-white/[0.08] rounded-xl p-4 space-y-3 shadow-sm">
+              <div className="flex items-center justify-between text-sm border-b border-white/[0.08] pb-2.5 font-medium">
+                <span className="text-[#8C8C88] uppercase text-[13px] tracking-wider font-semibold">
                   Activity Timeline
                 </span>
-                <span className="text-[#6B6B6B] text-[10px]">
+                <span className="text-[#8C8C88] text-xs sm:text-[13px]">
                   {events.length} events
                 </span>
               </div>
 
               {events.length === 0 ? (
-                <div className="text-[#6B6B6B] text-[11px] font-mono italic py-4 text-center">
+                <div className="text-[#8C8C88] text-sm italic py-5 text-center">
                   Waiting for task events...
                 </div>
               ) : (
-                <div className="space-y-2 max-h-72 overflow-y-auto font-mono text-[11px]">
+                <div className="space-y-3 max-h-80 overflow-y-auto text-sm">
                   {events.map((evt) => (
                     <div
                       key={evt.id}
-                      className="border-l-2 border-white/[0.12] pl-2.5 py-0.5 space-y-0.5"
+                      className="border-l-2 border-white/[0.12] pl-3 py-1 space-y-1"
                     >
-                      <div className="flex items-center justify-between text-[10px] text-[#6B6B6B]">
-                        <span className="uppercase text-[#F0A43C] font-semibold">
+                      <div className="flex items-center justify-between text-xs text-[#8C8C88]">
+                        <span className="uppercase text-[#F0A43C] font-semibold text-xs tracking-wide">
                           {evt.node}
                         </span>
-                        <span>
+                        <span className="font-mono text-xs text-[#8C8C88]">
                           {new Date(evt.timestamp).toLocaleTimeString([], {
                             hour: "2-digit",
                             minute: "2-digit",
@@ -271,7 +271,7 @@ export default function AgentPanel({
                           })}
                         </span>
                       </div>
-                      <div className="text-[#F2F2F0] leading-snug">{evt.message}</div>
+                      <div className="text-[#F2F2F0] text-sm sm:text-[15px] leading-relaxed">{evt.message}</div>
                     </div>
                   ))}
                 </div>
@@ -282,7 +282,7 @@ export default function AgentPanel({
 
         {/* CHANGES TAB */}
         {activeTab === "diff" && (
-          <div className="p-3 h-full flex flex-col">
+          <div className="p-3.5 h-full flex flex-col">
             {activeTask && activeTask.generated_changes.length > 0 ? (
               <DiffViewer
                 changes={activeTask.generated_changes}
@@ -291,10 +291,10 @@ export default function AgentPanel({
                 onReject={onRejectChanges}
               />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#6B6B6B] font-mono text-xs">
-                <FileDiff className="w-8 h-8 text-[#6B6B6B] mb-2" />
-                <span>No code changes generated yet.</span>
-                <span className="text-[11px] text-[#6B6B6B] mt-1">
+              <div className="h-full flex flex-col items-center justify-center text-center p-8 text-[#8C8C88] text-sm leading-relaxed">
+                <FileDiff className="w-10 h-10 text-[#8C8C88] mb-3" />
+                <span className="font-medium text-[#F2F2F0]">No code changes generated yet.</span>
+                <span className="text-[13px] text-[#8C8C88] mt-1.5 max-w-xs">
                   Changes appear here when the Coding Agent writes code.
                 </span>
               </div>
@@ -304,17 +304,17 @@ export default function AgentPanel({
 
         {/* TESTS TAB */}
         {activeTab === "tests" && (
-          <div className="p-3 h-full flex flex-col">
+          <div className="p-3.5 h-full flex flex-col">
             {activeTask?.test_results ? (
               <TestPanel
                 results={activeTask.test_results}
                 isRunning={activeTask.status === "testing"}
               />
             ) : (
-              <div className="h-full flex flex-col items-center justify-center text-center p-6 text-[#6B6B6B] font-mono text-xs">
-                <Terminal className="w-8 h-8 text-[#6B6B6B] mb-2" />
-                <span>No test executions recorded.</span>
-                <span className="text-[11px] text-[#6B6B6B] mt-1">
+              <div className="h-full flex flex-col items-center justify-center text-center p-8 text-[#8C8C88] text-sm leading-relaxed">
+                <Terminal className="w-10 h-10 text-[#8C8C88] mb-3" />
+                <span className="font-medium text-[#F2F2F0]">No test executions recorded.</span>
+                <span className="text-[13px] text-[#8C8C88] mt-1.5 max-w-xs">
                   Test output streams here when the Test Agent runs pytest.
                 </span>
               </div>
@@ -324,11 +324,11 @@ export default function AgentPanel({
 
         {/* FILES TAB */}
         {activeTab === "files" && (
-          <div className="p-3 h-full flex flex-col space-y-3">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B]">
+          <div className="p-3.5 h-full flex flex-col space-y-3.5">
+            <div className="text-[13px] uppercase tracking-wider text-[#8C8C88] font-semibold">
               Repository Files
             </div>
-            <div className="flex-1 overflow-y-auto bg-[#0D0E10] border border-white/[0.06] rounded-xl p-2">
+            <div className="flex-1 overflow-y-auto bg-[#0D0E10] border border-white/[0.06] rounded-xl p-2.5">
               <FileTree
                 tree={fileTree}
                 onSelectFile={onSelectFile}
@@ -336,12 +336,12 @@ export default function AgentPanel({
               />
             </div>
             {selectedFilePath && (
-              <div className="bg-[#0D0E10] border border-white/[0.06] rounded-xl p-3 max-h-48 overflow-y-auto font-mono text-xs">
-                <div className="text-[#F0A43C] font-medium pb-1 border-b border-white/[0.08] mb-1.5 flex items-center gap-1.5">
-                  <FileCode className="w-3.5 h-3.5" />
+              <div className="bg-[#0D0E10] border border-white/[0.06] rounded-xl p-3.5 max-h-56 overflow-y-auto font-mono text-xs">
+                <div className="text-[#F0A43C] font-semibold pb-1.5 border-b border-white/[0.08] mb-2 flex items-center gap-2 text-[13px]">
+                  <FileCode className="w-4 h-4" />
                   <span className="truncate">{selectedFilePath}</span>
                 </div>
-                <pre className="text-[11px] text-[#F2F2F0] overflow-x-auto whitespace-pre">
+                <pre className="text-xs sm:text-[13px] text-[#F2F2F0] overflow-x-auto whitespace-pre leading-relaxed">
                   {selectedFileContent || "(Empty or binary file)"}
                 </pre>
               </div>

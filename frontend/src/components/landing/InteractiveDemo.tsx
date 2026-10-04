@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Terminal, Play, CheckCircle2, RotateCw, ArrowRight, Check, AlertCircle } from "lucide-react";
 import Link from "next/link";
+import InteractiveCard from "./InteractiveCard";
 
 interface DemoTask {
   id: string;
@@ -118,7 +119,7 @@ export default function InteractiveDemo() {
   };
 
   return (
-    <section id="demo" className="py-24 border-b border-white/[0.08] bg-transparent relative">
+    <section id="demo" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mb-12">
@@ -157,7 +158,7 @@ export default function InteractiveDemo() {
         </div>
 
         {/* Interactive Terminal Window */}
-        <div className="rounded-xl border border-white/[0.08] bg-[#111214] overflow-hidden shadow-2xl font-mono text-xs">
+        <InteractiveCard variant="tilt" className="rounded-xl border border-white/[0.08] bg-[#111214] overflow-hidden shadow-2xl font-mono text-xs">
           {/* Top Bar */}
           <div className="h-10 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -266,7 +267,7 @@ export default function InteractiveDemo() {
               </div>
             )}
           </div>
-        </div>
+        </InteractiveCard>
       </div>
     </section>
   );

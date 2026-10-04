@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Project } from "@/types";
 import {
   ChevronDown,
@@ -16,6 +17,7 @@ import {
   PanelRightOpen,
   SidebarClose,
   SidebarOpen,
+  Plus,
 } from "lucide-react";
 
 interface AppHeaderProps {
@@ -51,7 +53,87 @@ export default function AppHeader({
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
   const [isPermissionsOpen, setIsPermissionsOpen] = useState(false);
 
+  const [popoverPosition, setPopoverPosition] = useState<{ top: number; left: number } | null>(null);
+  const projectTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const modelTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const permissionsTriggerRef = useRef<HTMLButtonElement | null>(null);
+
   const currentProject = projects.find((p) => p.id === selectedProjectId);
+
+  // Dynamic Anchor-Based Popover Positioning
+  // Ensures the Project Switcher opens cleanly shifted toward the Main Content Area,
+  // completely clear of the left sidebar controls (New Task, Project, Repo files).
+  const calculatePosition = () => {
+    if (!projectTriggerRef.current) return { top: 54, left: 284 };
+    const rect = projectTriggerRef.current.getBoundingClientRect();
+    const sidebarEl = typeof document !== "undefined" ? document.querySelector("aside") : null;
+    const sidebarRect = sidebarEl?.getBoundingClientRect();
+    const isDesktop = typeof window !== "undefined" && window.innerWidth >= 1024;
+    const sidebarRight =
+      sidebarRect && sidebarRect.width > 0 && isDesktop && isSidebarOpen
+        ? sidebarRect.right
+        : isDesktop && isSidebarOpen
+        ? 272
+        : 0;
+
+    const popoverWidth = 275;
+    const minLeft = sidebarRight > 0 ? sidebarRight + 12 : rect.left;
+    let left = Math.max(rect.right - 90, minLeft);
+    const maxLeft = typeof window !== "undefined" ? window.innerWidth - popoverWidth - 12 : 300;
+    left = Math.min(Math.max(12, left), maxLeft);
+    const top = rect.bottom + 6;
+    return { top, left };
+  };
+
+  const handleToggleProjectDropdown = () => {
+    if (isProjectDropdownOpen) {
+      setIsProjectDropdownOpen(false);
+      return;
+    }
+    const coords = calculatePosition();
+    setPopoverPosition(coords);
+    setIsProjectDropdownOpen(true);
+    setIsModelDropdownOpen(false);
+    setIsPermissionsOpen(false);
+  };
+
+  useEffect(() => {
+    if (!isProjectDropdownOpen) return;
+
+    const updatePosition = () => {
+      setPopoverPosition(calculatePosition());
+    };
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [isProjectDropdownOpen, isSidebarOpen]);
+
+  // Global Escape key handler for popovers
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        if (isProjectDropdownOpen) {
+          setIsProjectDropdownOpen(false);
+          projectTriggerRef.current?.focus();
+        } else if (isModelDropdownOpen) {
+          setIsModelDropdownOpen(false);
+          modelTriggerRef.current?.focus();
+        } else if (isPermissionsOpen) {
+          setIsPermissionsOpen(false);
+          permissionsTriggerRef.current?.focus();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isProjectDropdownOpen, isModelDropdownOpen, isPermissionsOpen]);
 
   const models = [
     { id: "auto", name: "Auto", desc: "LangGraph autonomous orchestrator" },
@@ -68,12 +150,12 @@ export default function AppHeader({
   ];
 
   return (
-    <header className="h-12 border-b border-white/[0.08] bg-[#0A0A0B] px-3.5 flex items-center justify-between shrink-0 z-30 select-none">
+    <header className="h-13 border-b border-white/[0.08] bg-[#0A0A0B] px-3.5 sm:px-4 flex items-center justify-between shrink-0 z-30 select-none">
       {/* Left zone: Sidebar toggle + Brand + Project Selector */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="p-1.5 text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214] rounded-md transition-colors"
+          className="p-1.5 text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214] rounded-lg transition-colors cursor-pointer"
           title={isSidebarOpen ? "Collapse sidebar (⌘B)" : "Expand sidebar"}
           aria-label="Toggle sidebar"
         >
@@ -86,80 +168,128 @@ export default function AppHeader({
 
         <Link
           href="/"
-          className="flex items-center gap-2 group text-[#F2F2F0] hover:text-white transition-colors"
+          className="flex items-center group transition-all shrink-0 select-none mr-1.5 logo-hover"
+          aria-label="LoopForge Home"
+          title="LoopForge — Back to Home"
         >
-          <div className="w-5 h-5 rounded-[5px] bg-gradient-to-br from-[#F0A43C] to-[#EF4444] flex items-center justify-center shadow-xs">
-            <Cpu className="w-3.2 h-3.2 text-[#0A0A0B] stroke-[2.5]" />
-          </div>
-          <span className="font-medium text-xs tracking-tight text-[#F2F2F0] hidden md:inline">
-            AI Engineering Assistant
-          </span>
+          <img
+            src="/loopforge-logo.png"
+            alt="LoopForge"
+            className="h-6 w-auto object-contain transition-all duration-200 group-hover:opacity-90 group-hover:brightness-105"
+            style={{ width: "auto", height: "24px" }}
+          />
         </Link>
 
-        <span className="text-white/20 font-mono text-xs hidden sm:inline">/</span>
+        <span className="text-white/20 text-xs hidden sm:inline">/</span>
 
         {/* Project Dropdown */}
         <div className="relative">
           <button
-            onClick={() => {
-              setIsProjectDropdownOpen(!isProjectDropdownOpen);
-              setIsModelDropdownOpen(false);
-              setIsPermissionsOpen(false);
-            }}
-            className="flex items-center gap-1.5 text-xs text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-2.5 py-1 rounded-md transition-all font-mono"
+            ref={projectTriggerRef}
+            onClick={handleToggleProjectDropdown}
+            aria-expanded={isProjectDropdownOpen}
+            aria-haspopup="true"
+            aria-label="Select active project"
+            className={`flex items-center gap-2 text-sm sm:text-[15px] text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+              isProjectDropdownOpen ? "border-[#F0A43C]/40 bg-[#181A1D]" : ""
+            }`}
           >
-            <FolderGit2 className="w-3.5 h-3.5 text-[#F6D58A]" />
-            <span className="font-medium max-w-[130px] truncate">
+            <FolderGit2 className="w-4 h-4 text-[#F6D58A]" />
+            <span className="font-medium max-w-[150px] truncate">
               {currentProject ? currentProject.name : "Select Project"}
             </span>
-            <ChevronDown className="w-3 h-3 text-[#6B6B6B]" />
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-[#8C8C88] transition-transform duration-150 ${
+                isProjectDropdownOpen ? "rotate-180 text-[#F0A43C]" : ""
+              }`}
+            />
           </button>
 
           {isProjectDropdownOpen && (
             <>
+              {/* Outside backdrop for click-outside dismissal */}
               <div
-                className="fixed inset-0 z-40"
+                className="fixed inset-0 z-40 cursor-default"
                 onClick={() => setIsProjectDropdownOpen(false)}
+                aria-hidden="true"
               />
-              <div className="absolute left-0 mt-1.5 w-60 bg-[#111214] border border-white/[0.12] rounded-lg shadow-2xl py-1.5 z-50 text-xs">
-                <div className="px-2.5 py-1 text-[10px] font-mono uppercase text-[#6B6B6B] tracking-wider">
-                  Active Projects
+
+              {/* Anchor-based Popover shifted into Main Content Area */}
+              <div
+                role="dialog"
+                aria-label="Active Projects"
+                className="fixed z-50 w-[300px] bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl py-2 text-sm animate-popover-in backdrop-blur-md"
+                style={{
+                  top: `${(popoverPosition || calculatePosition()).top}px`,
+                  left: `${(popoverPosition || calculatePosition()).left}px`,
+                }}
+              >
+                {/* Header */}
+                <div className="px-3.5 py-1.5 text-[13px] uppercase text-[#8C8C88] font-medium tracking-wider flex items-center justify-between border-b border-white/[0.06] mb-1">
+                  <span>Active Projects</span>
+                  <span className="text-xs text-[#A6A6A3] lowercase">{projects.length} available</span>
                 </div>
-                {projects.map((proj) => (
-                  <button
-                    key={proj.id}
-                    onClick={() => {
-                      onSelectProject(proj.id);
-                      setIsProjectDropdownOpen(false);
-                    }}
-                    className={`w-full text-left px-3 py-1.5 flex items-center justify-between hover:bg-[#181A1D] transition-colors ${
-                      proj.id === selectedProjectId
-                        ? "text-[#F0A43C] font-medium bg-[#181A1D]/60"
-                        : "text-[#A6A6A3]"
-                    }`}
-                  >
-                    <div className="truncate">
-                      <div className="font-mono">{proj.name}</div>
-                      <div className="text-[10px] text-[#6B6B6B] font-mono">
-                        {proj.language} &middot; {proj.file_count} files
+
+                {/* Project Items */}
+                <div className="max-h-64 overflow-y-auto px-1.5 space-y-0.5">
+                  {projects.map((proj) => (
+                    <button
+                      key={proj.id}
+                      onClick={() => {
+                        onSelectProject(proj.id);
+                        setIsProjectDropdownOpen(false);
+                      }}
+                      className={`w-full text-left px-3 py-2 rounded-lg flex items-center justify-between hover:bg-[#181A1D] transition-colors cursor-pointer group ${
+                        proj.id === selectedProjectId
+                          ? "text-[#F0A43C] font-semibold bg-[#181A1D]/80 border border-[#F0A43C]/20"
+                          : "text-[#A6A6A3] hover:text-[#F2F2F0]"
+                      }`}
+                    >
+                      <div className="truncate pr-2">
+                        <div className="text-[15px] text-[#F2F2F0] group-hover:text-white flex items-center gap-1.5 font-medium">
+                          <span>{proj.name}</span>
+                        </div>
+                        <div className="text-[13px] text-[#8C8C88] mt-0.5">
+                          {proj.language.charAt(0).toUpperCase() + proj.language.slice(1)} &middot; {proj.file_count} files
+                        </div>
                       </div>
-                    </div>
-                    {proj.id === selectedProjectId && (
-                      <Check className="w-3.5 h-3.5 text-[#F0A43C] shrink-0 ml-2" />
-                    )}
+                      {proj.id === selectedProjectId && (
+                        <Check className="w-4 h-4 text-[#F0A43C] shrink-0" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Subtle Divider */}
+                <div className="my-1 border-t border-white/[0.06]" />
+
+                {/* Add Project Action */}
+                <div className="px-1.5">
+                  <button
+                    onClick={() => {
+                      setIsProjectDropdownOpen(false);
+                      onOpenCommandPalette();
+                    }}
+                    className="w-full text-left px-3 py-2 rounded-lg flex items-center gap-2 hover:bg-[#181A1D] text-[#A6A6A3] hover:text-[#F2F2F0] transition-colors text-sm group cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4 text-[#F0A43C] group-hover:scale-110 transition-transform" />
+                    <span>Switch or Add Project...</span>
+                    <kbd className="ml-auto text-xs text-[#8C8C88] font-mono bg-[#0A0A0B] px-1.5 py-0.5 rounded border border-white/[0.08]">
+                      ⌘K
+                    </kbd>
                   </button>
-                ))}
+                </div>
               </div>
             </>
           )}
         </div>
 
         {/* Git Branch & Modified Files */}
-        <div className="hidden lg:flex items-center gap-1.5 text-[#A6A6A3] text-xs font-mono bg-[#111214] border border-white/[0.08] px-2 py-0.5 rounded-md">
-          <GitBranch className="w-3.5 h-3.5 text-[#6B6B6B]" />
-          <span>main</span>
+        <div className="hidden lg:flex items-center gap-2 text-[#A6A6A3] text-sm bg-[#111214] border border-white/[0.08] px-3 py-1 rounded-lg">
+          <GitBranch className="w-3.5 h-3.5 text-[#8C8C88]" />
+          <span className="font-mono text-xs sm:text-[13px]">main</span>
           {modifiedFilesCount > 0 && (
-            <span className="text-[#F0A43C] font-mono text-[11px] ml-1 bg-[#F0A43C]/10 px-1 rounded border border-[#F0A43C]/20">
+            <span className="text-[#F0A43C] font-mono text-xs ml-1 bg-[#F0A43C]/10 px-1.5 py-0.2 rounded border border-[#F0A43C]/20">
               +{modifiedFilesCount} files
             </span>
           )}
@@ -170,12 +300,12 @@ export default function AppHeader({
       <div className="flex items-center">
         <button
           onClick={onOpenCommandPalette}
-          className="flex items-center gap-2 text-[#A6A6A3] hover:text-[#F2F2F0] bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-3 py-1 rounded-md text-xs transition-colors font-mono"
+          className="flex items-center gap-2.5 text-[#A6A6A3] hover:text-[#F2F2F0] bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-3.5 py-1.5 rounded-lg text-sm sm:text-[15px] transition-colors cursor-pointer"
         >
-          <Search className="w-3.5 h-3.5 text-[#6B6B6B]" />
+          <Search className="w-4 h-4 text-[#8C8C88]" />
           <span className="hidden sm:inline text-[#A6A6A3]">Search tasks, files...</span>
           <span className="text-[#F2F2F0] sm:hidden">Search</span>
-          <kbd className="hidden sm:inline bg-[#0A0A0B] text-[#6B6B6B] border border-white/[0.08] px-1 rounded text-[10px]">
+          <kbd className="hidden sm:inline bg-[#0A0A0B] text-[#8C8C88] border border-white/[0.08] px-1.5 py-0.5 rounded text-xs font-mono">
             ⌘K
           </kbd>
         </button>
@@ -186,27 +316,35 @@ export default function AppHeader({
         {/* Model Selector Dropdown */}
         <div className="relative">
           <button
+            ref={modelTriggerRef}
             onClick={() => {
               setIsModelDropdownOpen(!isModelDropdownOpen);
               setIsProjectDropdownOpen(false);
               setIsPermissionsOpen(false);
             }}
-            className="flex items-center gap-1.5 text-xs text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-2.5 py-1 rounded-md transition-all font-mono"
+            aria-expanded={isModelDropdownOpen}
+            aria-haspopup="true"
+            className="flex items-center gap-2 text-sm sm:text-[15px] text-[#F2F2F0] hover:text-white bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] hover:border-white/[0.14] px-3 py-1.5 rounded-lg transition-all cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-[#F0A43C]" />
+            <Sparkles className="w-4 h-4 text-[#F0A43C]" />
             <span className="capitalize hidden sm:inline">Model: {selectedModel}</span>
             <span className="capitalize sm:hidden">{selectedModel}</span>
-            <ChevronDown className="w-3 h-3 text-[#6B6B6B]" />
+            <ChevronDown
+              className={`w-3.5 h-3.5 text-[#8C8C88] transition-transform duration-150 ${
+                isModelDropdownOpen ? "rotate-180 text-[#F0A43C]" : ""
+              }`}
+            />
           </button>
 
           {isModelDropdownOpen && (
             <>
               <div
-                className="fixed inset-0 z-40"
+                className="fixed inset-0 z-40 cursor-default"
                 onClick={() => setIsModelDropdownOpen(false)}
+                aria-hidden="true"
               />
-              <div className="absolute right-0 mt-1.5 w-56 bg-[#111214] border border-white/[0.12] rounded-lg shadow-2xl py-1.5 z-50 text-xs">
-                <div className="px-2.5 py-1 text-[10px] font-mono uppercase text-[#6B6B6B] tracking-wider">
+              <div className="absolute right-0 mt-2 w-64 bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl py-2 z-50 text-sm animate-popover-in backdrop-blur-md">
+                <div className="px-3 py-1.5 text-[13px] uppercase text-[#8C8C88] font-medium tracking-wider">
                   Model Routing
                 </div>
                 {models.map((m) => (
@@ -216,19 +354,19 @@ export default function AppHeader({
                       onSelectModel(m.id);
                       setIsModelDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-1.5 hover:bg-[#181A1D] transition-colors ${
+                    className={`w-full text-left px-3.5 py-2 hover:bg-[#181A1D] transition-colors cursor-pointer ${
                       m.id === selectedModel
-                        ? "text-[#F0A43C] font-medium bg-[#181A1D]/60"
+                        ? "text-[#F0A43C] font-semibold bg-[#181A1D]/60"
                         : "text-[#A6A6A3]"
                     }`}
                   >
-                    <div className="font-mono flex items-center justify-between">
+                    <div className="flex items-center justify-between text-sm sm:text-[15px] font-medium">
                       {m.name}
                       {m.id === selectedModel && (
-                        <Check className="w-3.5 h-3.5 text-[#F0A43C]" />
+                        <Check className="w-4 h-4 text-[#F0A43C]" />
                       )}
                     </div>
-                    <div className="text-[10px] text-[#6B6B6B] mt-0.5">{m.desc}</div>
+                    <div className="text-[13px] text-[#8C8C88] mt-0.5">{m.desc}</div>
                   </button>
                 ))}
               </div>
@@ -239,40 +377,44 @@ export default function AppHeader({
         {/* Permissions Popover */}
         <div className="relative hidden md:block">
           <button
+            ref={permissionsTriggerRef}
             onClick={() => {
               setIsPermissionsOpen(!isPermissionsOpen);
               setIsProjectDropdownOpen(false);
               setIsModelDropdownOpen(false);
             }}
-            className="flex items-center gap-1.5 text-xs text-[#A6A6A3] hover:text-[#F2F2F0] bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] px-2 py-1 rounded-md transition-colors"
+            aria-expanded={isPermissionsOpen}
+            aria-haspopup="true"
+            className="flex items-center gap-1.5 text-sm sm:text-[15px] text-[#A6A6A3] hover:text-[#F2F2F0] bg-[#111214] hover:bg-[#181A1D] border border-white/[0.08] px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
             title="Agent Sandbox & Execution Permissions"
           >
-            <ShieldCheck className="w-3.5 h-3.5 text-[#22C55E]" />
-            <span className="text-[11px] font-mono hidden xl:inline">Permissions</span>
+            <ShieldCheck className="w-4 h-4 text-[#22C55E]" />
+            <span className="hidden xl:inline">Permissions</span>
           </button>
 
           {isPermissionsOpen && (
             <>
               <div
-                className="fixed inset-0 z-40"
+                className="fixed inset-0 z-40 cursor-default"
                 onClick={() => setIsPermissionsOpen(false)}
+                aria-hidden="true"
               />
-              <div className="absolute right-0 mt-1.5 w-64 bg-[#111214] border border-white/[0.12] rounded-lg shadow-2xl p-2.5 z-50 text-xs">
-                <div className="font-medium text-[#F2F2F0] mb-1 flex items-center justify-between">
+              <div className="absolute right-0 mt-2 w-72 bg-[#111214] border border-white/[0.12] rounded-xl shadow-2xl p-3.5 z-50 text-sm animate-popover-in backdrop-blur-md">
+                <div className="font-semibold text-[#F2F2F0] mb-1 flex items-center justify-between text-sm sm:text-[15px]">
                   <span>Agent Permissions</span>
-                  <span className="text-[10px] text-[#22C55E] font-mono">Enforced</span>
+                  <span className="text-xs text-[#22C55E] font-medium">Enforced</span>
                 </div>
-                <p className="text-[11px] text-[#A6A6A3] mb-2">
+                <p className="text-[13px] text-[#A6A6A3] mb-3 leading-relaxed">
                   Subprocess sandboxing isolates code execution and tests.
                 </p>
-                <div className="space-y-1.5 border-t border-white/[0.08] pt-2">
+                <div className="space-y-2 border-t border-white/[0.08] pt-2.5">
                   {permissions.map((p, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between text-[11px] font-mono text-[#F2F2F0]"
+                      className="flex items-center justify-between text-[13px] sm:text-sm text-[#F2F2F0]"
                     >
                       <span>{p.label}</span>
-                      <span className="text-[#6B6B6B] text-[10px] bg-[#0A0A0B] px-1.5 py-0.5 rounded border border-white/[0.06]">
+                      <span className="text-[#8C8C88] text-xs bg-[#0A0A0B] px-2 py-0.5 rounded border border-white/[0.06]">
                         {p.status}
                       </span>
                     </div>
@@ -286,7 +428,7 @@ export default function AppHeader({
         {/* Right Panel Toggle Button */}
         <button
           onClick={onToggleRightPanel}
-          className={`p-1.5 rounded-md transition-colors ${
+          className={`p-2 rounded-lg transition-colors cursor-pointer ${
             isRightPanelOpen
               ? "text-[#F0A43C] bg-[#181A1D] border border-[#F0A43C]/30"
               : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214] border border-transparent"

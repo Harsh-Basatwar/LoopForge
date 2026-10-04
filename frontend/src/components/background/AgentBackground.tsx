@@ -464,6 +464,9 @@ export default function AgentBackground() {
         const tx = item.x + mx * pFactor;
         const ty = item.y + my * pFactor;
 
+        // Keep the area immediately around the LoopForge logo quiet and clean
+        if (tx < 220 && ty < 90) return;
+
         // Render token
         ctx.font = item.kind === "diff" ? "10px ui-monospace, monospace" : "9.5px ui-monospace, monospace";
 
@@ -497,7 +500,7 @@ export default function AgentBackground() {
     <div
       ref={containerRef}
       aria-hidden="true"
-      className="fixed inset-0 pointer-events-none overflow-hidden z-0"
+      className="fixed inset-0 pointer-events-none overflow-hidden -z-10"
     >
       {/* Dynamic Ambient Glow Shifting with Active Section */}
       <div
@@ -518,18 +521,14 @@ export default function AgentBackground() {
         className="absolute inset-0 w-full h-full block"
       />
 
-      {/* Content Fade Zone / Mask: Keeps the center calm so typography and cards remain 100% legible */}
+      {/* Edge Atmosphere Vignette: Center is 100% CLEAR, edges provide peripheral depth */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 60% 60% at 50% 45%, rgba(10, 10, 11, 0.88) 0%, rgba(10, 10, 11, 0.45) 55%, transparent 100%)",
+            "radial-gradient(ellipse 80% 70% at 50% 50%, transparent 0%, transparent 60%, rgba(10, 10, 11, 0.35) 85%, rgba(10, 10, 11, 0.70) 100%)",
         }}
       />
-
-      {/* Top & Bottom Bleed Gradients for Seamless Blend */}
-      <div className="absolute top-0 left-0 right-0 h-28 bg-gradient-to-b from-[#0A0A0B] to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#0A0A0B] to-transparent" />
     </div>
   );
 }

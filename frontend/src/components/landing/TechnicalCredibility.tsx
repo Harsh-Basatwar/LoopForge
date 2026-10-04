@@ -1,6 +1,7 @@
 "use client";
 
 import { Cpu, Server, Layout, ShieldAlert } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function TechnicalCredibility() {
   const stack = [
@@ -31,7 +32,7 @@ export default function TechnicalCredibility() {
   ];
 
   return (
-    <section className="py-24 border-b border-white/[0.08] bg-transparent">
+    <section className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-16">
           <span className="text-xs font-mono uppercase tracking-wider text-[#F6D58A] font-semibold mb-2 block">
@@ -47,11 +48,13 @@ export default function TechnicalCredibility() {
 
         {/* 4 Infrastructure Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {stack.map((item) => {
+          {stack.map((item, idx) => {
             const Icon = item.icon;
             return (
-              <div
+              <InteractiveCard
                 key={item.name}
+                variant="interactive"
+                revealDelay={idx * 80}
                 className="p-5 rounded-xl border border-white/[0.08] bg-[#111214] flex flex-col justify-between hover:border-white/[0.14] transition-colors"
               >
                 <div>
@@ -66,7 +69,7 @@ export default function TechnicalCredibility() {
                 <p className="text-xs text-[#A6A6A3] font-sans leading-relaxed">
                   {item.desc}
                 </p>
-              </div>
+              </InteractiveCard>
             );
           })}
         </div>

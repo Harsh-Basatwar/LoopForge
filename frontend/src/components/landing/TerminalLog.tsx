@@ -1,6 +1,7 @@
 "use client";
 
 import { Terminal } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function TerminalLog() {
   const logEntries = [
@@ -16,9 +17,9 @@ export default function TerminalLog() {
   ];
 
   return (
-    <section className="py-20 border-b border-white/[0.08] bg-transparent">
+    <section className="py-20 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6">
-        <div className="rounded-xl border border-white/[0.08] bg-[#111214] overflow-hidden shadow-2xl font-mono text-xs">
+        <InteractiveCard variant="tilt" className="rounded-xl border border-white/[0.08] bg-[#111214] overflow-hidden shadow-2xl font-mono text-xs">
           <div className="h-9 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Terminal className="w-3.5 h-3.5 text-[#F0A43C]" />
@@ -39,7 +40,7 @@ export default function TerminalLog() {
               </div>
             ))}
           </div>
-        </div>
+        </InteractiveCard>
       </div>
     </section>
   );

@@ -5,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 
 export default function FinalCTA() {
   return (
-    <section className="py-28 border-b border-white/[0.08] bg-transparent text-center relative overflow-hidden">
+    <section className="py-28 border-b border-white/[0.08] bg-transparent text-center relative z-10 overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         <h2 className="font-serif font-semibold sm:font-bold text-4xl sm:text-6xl md:text-7xl lg:text-[76px] tracking-[-0.01em] text-[#F2F2F0] leading-[1.02]">
           Give your next task to the agent.

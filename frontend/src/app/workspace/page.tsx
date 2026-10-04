@@ -256,7 +256,7 @@ export default function WorkspacePage() {
     activeTask.status !== "awaiting_approval";
 
   return (
-    <div className="h-screen bg-[#0A0A0B] text-[#F2F2F0] flex flex-col overflow-hidden font-sans">
+    <div className="h-screen bg-[#0A0A0B] text-[#F2F2F0] flex flex-col overflow-hidden font-serif">
       {/* 1. App Header */}
       <AppHeader
         projects={projects}

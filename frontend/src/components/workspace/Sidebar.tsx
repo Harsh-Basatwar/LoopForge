@@ -93,39 +93,39 @@ export default function Sidebar({
         }`}
       >
         {/* Top Action: New Task */}
-        <div className="p-3 border-b border-white/[0.08]">
+        <div className="p-3.5 border-b border-white/[0.08]">
           <button
             onClick={() => {
               onNewTask();
               if (window.innerWidth < 1024) onClose();
             }}
-            className="w-full flex items-center justify-center gap-2 bg-[#111214] hover:bg-[#181A1D] text-[#F2F2F0] hover:text-white border border-white/[0.08] hover:border-white/[0.14] py-2 px-3 rounded-lg text-xs font-medium transition-all shadow-xs group"
+            className="w-full flex items-center justify-center gap-2.5 bg-[#111214] hover:bg-[#181A1D] text-[#F2F2F0] hover:text-white border border-white/[0.08] hover:border-white/[0.14] py-2.5 px-3.5 rounded-lg text-sm sm:text-[15px] font-medium transition-all shadow-xs group cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5 text-[#F0A43C] group-hover:scale-110 transition-transform" />
+            <Plus className="w-4 h-4 text-[#F0A43C] group-hover:scale-110 transition-transform" />
             <span>New Task</span>
-            <kbd className="ml-auto text-[10px] text-[#6B6B6B] font-mono bg-[#0A0A0B] px-1 py-0.5 rounded border border-white/[0.08]">
+            <kbd className="ml-auto text-xs text-[#8C8C88] font-mono bg-[#0A0A0B] px-1.5 py-0.5 rounded border border-white/[0.08]">
               ⌘N
             </kbd>
           </button>
         </div>
 
         {/* Scrollable Navigation Body */}
-        <div className="flex-1 overflow-y-auto px-2 py-3 space-y-5 text-xs">
+        <div className="flex-1 overflow-y-auto px-2.5 py-4 space-y-6 text-sm">
           {/* Active Project Section */}
           <div>
-            <div className="px-2 text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-1.5 flex items-center justify-between">
+            <div className="px-2 text-[13px] uppercase tracking-wider text-[#8C8C88] font-medium mb-2 flex items-center justify-between">
               <span>Project</span>
-              <span className="text-[10px] text-[#6B6B6B] font-mono">
+              <span className="text-[13px] text-[#A6A6A3] capitalize">
                 {currentProject?.language}
               </span>
             </div>
 
-            <div className="bg-[#111214] border border-white/[0.08] rounded-lg p-2.5">
-              <div className="font-mono text-[#F2F2F0] text-xs font-medium truncate flex items-center gap-1.5">
-                <FolderGit2 className="w-3.5 h-3.5 text-[#F6D58A] shrink-0" />
+            <div className="bg-[#111214] border border-white/[0.08] rounded-xl p-3">
+              <div className="text-[#F2F2F0] text-base sm:text-[17px] font-semibold truncate flex items-center gap-2">
+                <FolderGit2 className="w-4 h-4 text-[#F6D58A] shrink-0" />
                 <span className="truncate">{currentProject?.name || "No Project"}</span>
               </div>
-              <div className="mt-1 flex items-center justify-between text-[11px] text-[#6B6B6B] font-mono">
+              <div className="mt-1.5 flex items-center justify-between text-[13px] text-[#8C8C88]">
                 <span>{fileTree.length} files detected</span>
                 <span>{tasks.length} tasks</span>
               </div>
@@ -136,23 +136,23 @@ export default function Sidebar({
           <div>
             <button
               onClick={() => setIsFilesExpanded(!isFilesExpanded)}
-              className="w-full flex items-center justify-between px-2 text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B] hover:text-[#A6A6A3] transition-colors mb-1.5"
+              className="w-full flex items-center justify-between px-2 text-[13px] uppercase tracking-wider text-[#8C8C88] font-medium hover:text-[#A6A6A3] transition-colors mb-2 cursor-pointer"
             >
-              <span className="flex items-center gap-1">
+              <span className="flex items-center gap-1.5">
                 {isFilesExpanded ? (
-                  <ChevronDown className="w-3 h-3 text-[#6B6B6B]" />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#8C8C88]" />
                 ) : (
-                  <ChevronRight className="w-3 h-3 text-[#6B6B6B]" />
+                  <ChevronRight className="w-3.5 h-3.5 text-[#8C8C88]" />
                 )}
                 <span>Repository Files</span>
               </span>
-              <span className="text-[10px] text-[#6B6B6B]">{fileTree.length}</span>
+              <span className="text-[13px] text-[#8C8C88]">{fileTree.length}</span>
             </button>
 
             {isFilesExpanded && (
-              <div className="bg-[#0D0E10] border border-white/[0.06] rounded-lg p-1.5 max-h-48 overflow-y-auto space-y-0.5">
+              <div className="bg-[#0D0E10] border border-white/[0.06] rounded-xl p-2 max-h-52 overflow-y-auto space-y-0.5">
                 {fileTree.length === 0 ? (
-                  <div className="text-[#6B6B6B] font-mono text-[11px] px-2 py-1 italic">
+                  <div className="text-[#8C8C88] text-sm px-2 py-1.5 italic">
                     Loading file tree...
                   </div>
                 ) : (
@@ -163,18 +163,18 @@ export default function Sidebar({
                         onSelectFile(node.path);
                         if (window.innerWidth < 1024) onClose();
                       }}
-                      className={`w-full text-left px-2 py-1 rounded flex items-center gap-1.5 font-mono text-[11px] truncate transition-colors ${
+                      className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center gap-2 text-sm sm:text-[15px] truncate transition-colors cursor-pointer ${
                         selectedFilePath === node.path
-                          ? "bg-[#F0A43C]/10 text-[#F0A43C] font-medium border border-[#F0A43C]/30"
+                          ? "bg-[#F0A43C]/10 text-[#F0A43C] font-semibold border border-[#F0A43C]/30"
                           : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214]"
                       }`}
                     >
                       {node.is_dir ? (
-                        <Folder className="w-3 h-3 text-[#F6D58A]/80 shrink-0" />
+                        <Folder className="w-3.5 h-3.5 text-[#F6D58A]/80 shrink-0" />
                       ) : (
-                        <FileCode className="w-3 h-3 text-[#6B6B6B] shrink-0" />
+                        <FileCode className="w-3.5 h-3.5 text-[#8C8C88] shrink-0" />
                       )}
-                      <span className="truncate">{node.path}</span>
+                      <span className="truncate font-mono text-[13px]">{node.path}</span>
                     </button>
                   ))
                 )}
@@ -184,19 +184,19 @@ export default function Sidebar({
 
           {/* Recent Tasks List */}
           <div>
-            <div className="px-2 text-[10px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-2">
+            <div className="px-2 text-[13px] uppercase tracking-wider text-[#8C8C88] font-medium mb-2.5">
               Recent Tasks
             </div>
 
             {tasks.length === 0 ? (
-              <div className="px-2 py-4 text-center text-[#6B6B6B] text-xs italic">
+              <div className="px-2 py-4 text-center text-[#8C8C88] text-sm italic">
                 No recent tasks yet
               </div>
             ) : (
               <div className="space-y-4">
                 {todayTasks.length > 0 && (
                   <div>
-                    <div className="px-2 text-[9px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-1">
+                    <div className="px-2 text-xs uppercase tracking-wider text-[#8C8C88] font-medium mb-1.5">
                       Today
                     </div>
                     <div className="space-y-1">
@@ -207,18 +207,18 @@ export default function Sidebar({
                             onSelectTask(t);
                             if (window.innerWidth < 1024) onClose();
                           }}
-                          className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-start gap-2 transition-all ${
+                          className={`w-full text-left px-3 py-2 rounded-lg flex items-start gap-2.5 transition-all cursor-pointer ${
                             activeTaskId === t.id
                               ? "bg-[#181A1D] text-[#F2F2F0] border border-white/[0.12]"
                               : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214] border border-transparent"
                           }`}
                         >
-                          <div className="mt-0.5">{getStatusBadge(t.status)}</div>
+                          <div className="mt-1">{getStatusBadge(t.status)}</div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs truncate font-medium">
+                            <div className="text-[15px] sm:text-base truncate font-medium">
                               {t.title}
                             </div>
-                            <div className="text-[10px] text-[#6B6B6B] font-mono flex items-center gap-1.5 mt-0.5">
+                            <div className="text-[13px] text-[#8C8C88] flex items-center gap-1.5 mt-0.5">
                               <span>
                                 {t.iteration}/{t.max_iterations} iter
                               </span>
@@ -235,7 +235,7 @@ export default function Sidebar({
 
                 {earlierTasks.length > 0 && (
                   <div>
-                    <div className="px-2 text-[9px] font-mono uppercase tracking-wider text-[#6B6B6B] mb-1">
+                    <div className="px-2 text-xs uppercase tracking-wider text-[#8C8C88] font-medium mb-1.5">
                       Earlier
                     </div>
                     <div className="space-y-1">
@@ -246,18 +246,18 @@ export default function Sidebar({
                             onSelectTask(t);
                             if (window.innerWidth < 1024) onClose();
                           }}
-                          className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-start gap-2 transition-all ${
+                          className={`w-full text-left px-3 py-2 rounded-lg flex items-start gap-2.5 transition-all cursor-pointer ${
                             activeTaskId === t.id
                               ? "bg-[#181A1D] text-[#F2F2F0] border border-white/[0.12]"
                               : "text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214] border border-transparent"
                           }`}
                         >
-                          <div className="mt-0.5">{getStatusBadge(t.status)}</div>
+                          <div className="mt-1">{getStatusBadge(t.status)}</div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-xs truncate font-medium">
+                            <div className="text-[15px] sm:text-base truncate font-medium">
                               {t.title}
                             </div>
-                            <div className="text-[10px] text-[#6B6B6B] font-mono">
+                            <div className="text-[13px] text-[#8C8C88]">
                               {new Date(t.created_at).toLocaleDateString()}
                             </div>
                           </div>
@@ -272,12 +272,12 @@ export default function Sidebar({
         </div>
 
         {/* Bottom System Status */}
-        <div className="p-3 border-t border-white/[0.08] bg-[#0A0A0B] flex items-center justify-between text-[11px] font-mono text-[#6B6B6B]">
+        <div className="p-3 border-t border-white/[0.08] bg-[#0A0A0B] flex items-center justify-between text-xs sm:text-[13px] text-[#8C8C88]">
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#22C55E] animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-pulse" />
             <span>Orchestrator ready</span>
           </div>
-          <span className="text-[#6B6B6B]">v0.9.4</span>
+          <span className="font-mono text-xs text-[#8C8C88]">v0.9.4</span>
         </div>
       </aside>
     </>

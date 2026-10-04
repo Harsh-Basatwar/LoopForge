@@ -14,6 +14,7 @@ import {
   Search,
   ArrowRight,
 } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 interface WorkflowStep {
   number: string;
@@ -72,6 +73,39 @@ export default function Capabilities() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [activeStepIndex, setActiveStepIndex] = useState(0);
+  const [testCountStage4, setTestCountStage4] = useState({ passed: 0, failed: 0 });
+  const [testCountStage6, setTestCountStage6] = useState(0);
+
+  // Animated test counters when entering execution and improvement stages
+  useEffect(() => {
+    if (activeStepIndex === 3) {
+      setTestCountStage4({ passed: 0, failed: 0 });
+      let p = 0;
+      const t = setInterval(() => {
+        p += 5;
+        if (p >= 47) {
+          setTestCountStage4({ passed: 47, failed: 2 });
+          clearInterval(t);
+        } else {
+          setTestCountStage4({ passed: p, failed: 0 });
+        }
+      }, 50);
+      return () => clearInterval(t);
+    } else if (activeStepIndex === 5) {
+      setTestCountStage6(0);
+      let p = 0;
+      const t = setInterval(() => {
+        p += 5;
+        if (p >= 49) {
+          setTestCountStage6(49);
+          clearInterval(t);
+        } else {
+          setTestCountStage6(p);
+        }
+      }, 40);
+      return () => clearInterval(t);
+    }
+  }, [activeStepIndex]);
 
   // High-performance RAF scroll tracker for sticky progress
   useEffect(() => {
@@ -130,7 +164,7 @@ export default function Capabilities() {
     <section
       id="capabilities"
       ref={sectionRef}
-      className="relative bg-[#0A0A0B] border-b border-white/[0.08]"
+      className="relative z-10 bg-[#0A0A0B] border-b border-white/[0.08]"
       style={{ height: "600vh" }}
     >
       {/* Dynamic Background Glow based on current active step */}
@@ -268,7 +302,11 @@ export default function Capabilities() {
             </div>
 
             {/* Right Column: Dynamic Live Observation Panel (7 cols) */}
-            <div className="lg:col-span-7 rounded-2xl border border-white/[0.08] bg-[#111214] shadow-2xl overflow-hidden flex flex-col justify-between h-[480px] lg:h-[520px]">
+            <InteractiveCard
+              variant="subtle"
+              className="lg:col-span-7 rounded-2xl border border-white/[0.08] bg-[#111214] shadow-2xl overflow-hidden h-[480px] lg:h-[520px]"
+              innerClassName="h-full flex flex-col justify-between"
+            >
               {/* Header Bar */}
               <div className="h-10 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex items-center justify-between font-mono text-xs">
                 <div className="flex items-center gap-2">
@@ -389,7 +427,7 @@ export default function Capabilities() {
                         </div>
                       </div>
                       <div className="pt-2 text-xs font-semibold text-[#F2F2F0] flex items-center justify-between border-t border-white/[0.06]">
-                        <span>47 passed, 2 failed</span>
+                        <span>{testCountStage4.passed} passed, {testCountStage4.failed} failed</span>
                         <span className="text-[10px] text-[#6B6B6B]">Execution: 2.84s</span>
                       </div>
                     </div>
@@ -426,7 +464,7 @@ export default function Capabilities() {
                       <div className="text-[#6B6B6B] text-[11px]">$ pytest tests/test_auth.py -v</div>
                       <div className="p-2.5 rounded-lg bg-[#22C55E]/10 border border-[#22C55E]/30 text-xs text-[#22C55E] font-bold flex items-center gap-2">
                         <CheckCircle2 className="w-4 h-4" />
-                        <span>49 passed, 0 failed in 0.18s ✓</span>
+                        <span>{testCountStage6} passed, 0 failed in 0.18s ✓</span>
                       </div>
                       <div className="space-y-0.5 text-[11px] text-[#A6A6A3] pl-3 border-l-2 border-[#22C55E]/40">
                         <div>✓ Authentication flow passed</div>
@@ -451,7 +489,7 @@ export default function Capabilities() {
                   <span className="text-[#F2F2F0]">State Verified ✓</span>
                 </div>
               </div>
-            </div>
+            </InteractiveCard>
           </div>
 
           {/* Bottom Prompt / Scroll Helper */}

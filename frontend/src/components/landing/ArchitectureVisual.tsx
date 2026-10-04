@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Sparkles, Database, Code2, FlaskConical, Wrench, CheckCircle2, RotateCw } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function ArchitectureVisual() {
   const [selectedNode, setSelectedNode] = useState<string>("coder");
@@ -64,7 +65,7 @@ export default function ArchitectureVisual() {
   const current = nodeDetails[selectedNode] || nodeDetails.tester;
 
   return (
-    <section id="architecture" className="py-24 border-b border-white/[0.08] bg-transparent">
+    <section id="architecture" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-12">
           <span className="text-xs font-mono uppercase tracking-wider text-[#F6D58A] font-semibold mb-2 block">
@@ -81,7 +82,7 @@ export default function ArchitectureVisual() {
         {/* Technical Diagram Container */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Interactive Graph Canvas (7 cols) */}
-          <div className="lg:col-span-7 p-6 rounded-xl border border-white/[0.08] bg-[#111214] font-mono text-xs flex flex-col items-center relative overflow-hidden shadow-2xl">
+          <InteractiveCard variant="spotlight" className="lg:col-span-7 p-6 rounded-xl border border-white/[0.08] bg-[#111214] font-mono text-xs flex flex-col items-center relative overflow-hidden shadow-2xl hover:border-white/[0.14]">
             {/* Auto Cycle Indicator */}
             <div className="w-full flex items-center justify-between pb-3 mb-4 border-b border-white/[0.06] text-[10px] text-[#6B6B6B]">
               <span className="uppercase font-semibold">Compiled LangGraph Topology</span>
@@ -230,10 +231,10 @@ export default function ArchitectureVisual() {
                 <span className="text-[9px] text-[#22C55E]/80 block mt-0.5">Diff Review</span>
               </div>
             </div>
-          </div>
+          </InteractiveCard>
 
           {/* Node Contract Inspector (5 cols) */}
-          <div className="lg:col-span-5 p-6 rounded-xl border border-white/[0.08] bg-[#111214] font-mono text-xs shadow-2xl">
+          <InteractiveCard variant="spotlight" revealDelay={120} className="lg:col-span-5 p-6 rounded-xl border border-white/[0.08] bg-[#111214] font-mono text-xs shadow-2xl hover:border-white/[0.14]">
             <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4">
               <div>
                 <span className="text-[10px] uppercase text-[#F0A43C] font-semibold block">
@@ -268,7 +269,7 @@ export default function ArchitectureVisual() {
                 </p>
               </div>
             </div>
-          </div>
+          </InteractiveCard>
         </div>
       </div>
     </section>

@@ -1,10 +1,11 @@
 "use client";
 
 import { MessageSquareCode, Cpu } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function NotJustAChatbot() {
   return (
-    <section className="py-24 border-b border-white/[0.08] bg-transparent">
+    <section className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mb-16">
           <span className="text-xs font-mono uppercase tracking-wider text-[#F6D58A] font-semibold mb-2 block">
@@ -20,7 +21,10 @@ export default function NotJustAChatbot() {
         </div>
 
         {/* Dual Layer Architectural Reveal */}
-        <div className="rounded-xl border border-white/[0.08] bg-[#111214] p-6 sm:p-8 shadow-2xl relative overflow-hidden font-mono text-xs">
+        <InteractiveCard
+          variant="spotlight"
+          className="rounded-xl border border-white/[0.08] bg-[#111214] p-6 sm:p-8 shadow-2xl relative overflow-hidden font-mono text-xs hover:border-white/[0.14]"
+        >
           {/* Layer 1: Surface Chat Layer */}
           <div className="p-4 rounded-xl border border-white/[0.08] bg-[#0D0E10] mb-6">
             <div className="flex items-center justify-between text-[#A6A6A3] text-[11px] mb-3">
@@ -88,7 +92,7 @@ export default function NotJustAChatbot() {
               </div>
             </div>
           </div>
-        </div>
+        </InteractiveCard>
       </div>
     </section>
   );

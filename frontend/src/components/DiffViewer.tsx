@@ -26,7 +26,7 @@ export default function DiffViewer({
 
   if (!changes || changes.length === 0) {
     return (
-      <div className="p-8 text-center text-[#6B6B6B] font-mono text-xs border border-dashed border-white/[0.08] rounded-xl bg-[#111214]">
+      <div className="p-8 text-center text-[#6B6B6B] text-xs border border-dashed border-white/[0.08] rounded-xl bg-[#111214]">
         No code changes generated yet. Submit a task or wait for the Coding Agent.
       </div>
     );
@@ -35,7 +35,7 @@ export default function DiffViewer({
   const activeChange = changes[selectedFileIdx] || changes[0];
 
   const renderDiffLines = (diffStr: string) => {
-    if (!diffStr) return <div className="text-[#6B6B6B] p-4 font-mono">No diff available (new file)</div>;
+    if (!diffStr) return <div className="text-[#6B6B6B] p-4 text-xs">No diff available (new file)</div>;
     const lines = diffStr.split("\n");
 
     return (
@@ -53,7 +53,7 @@ export default function DiffViewer({
 
           return (
             <div key={idx} className={`flex items-start px-3 py-0.5 hover:bg-[#181A1D] ${bgClass}`}>
-              <span className="w-8 shrink-0 text-[10px] select-none text-[#6B6B6B] text-right pr-3 font-mono">
+              <span className="w-8 shrink-0 text-xs select-none text-[#6B6B6B] text-right pr-3 font-mono">
                 {idx + 1}
               </span>
               <pre className="whitespace-pre flex-1 font-mono">{line}</pre>
@@ -67,21 +67,21 @@ export default function DiffViewer({
   return (
     <div className="bg-[#111214] border border-white/[0.08] rounded-xl overflow-hidden shadow-sm flex flex-col">
       {/* Diff Header */}
-      <div className="border-b border-white/[0.08] bg-[#0D0E10] p-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
+      <div className="border-b border-white/[0.08] bg-[#0D0E10] p-3.5 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5">
           <FileCode className="w-4 h-4 text-[#F0A43C]" />
-          <span className="text-xs font-semibold text-[#F2F2F0]">Proposed Code Changes</span>
-          <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#181A1D] text-[#A6A6A3] border border-white/[0.06]">
+          <span className="text-sm sm:text-[15px] font-semibold text-[#F2F2F0]">Proposed Code Changes</span>
+          <span className="text-xs px-2.5 py-0.5 rounded-md bg-[#181A1D] text-[#A6A6A3] border border-white/[0.06]">
             {changes.length} file{changes.length === 1 ? "" : "s"}
           </span>
         </div>
 
         {/* View mode toggle */}
-        <div className="flex items-center gap-1 bg-[#0A0A0B] border border-white/[0.08] p-0.5 rounded-lg text-xs">
+        <div className="flex items-center gap-1 bg-[#0A0A0B] border border-white/[0.08] p-1 rounded-lg text-sm">
           <button
             type="button"
             onClick={() => setViewMode("diff")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs sm:text-sm transition-colors cursor-pointer ${
               viewMode === "diff"
                 ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-white/[0.08]"
                 : "text-[#A6A6A3] hover:text-[#F2F2F0]"
@@ -93,7 +93,7 @@ export default function DiffViewer({
           <button
             type="button"
             onClick={() => setViewMode("full")}
-            className={`flex items-center gap-1.5 px-2.5 py-1 rounded text-[11px] font-mono transition-colors cursor-pointer ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-md text-xs sm:text-sm transition-colors cursor-pointer ${
               viewMode === "full"
                 ? "bg-[#181A1D] text-[#F0A43C] font-semibold border border-white/[0.08]"
                 : "text-[#A6A6A3] hover:text-[#F2F2F0]"
@@ -106,13 +106,13 @@ export default function DiffViewer({
       </div>
 
       {/* File Tabs */}
-      <div className="flex items-center gap-1 px-3 pt-2 bg-[#0A0A0B] border-b border-white/[0.08] overflow-x-auto">
+      <div className="flex items-center gap-1.5 px-3 pt-2 bg-[#0A0A0B] border-b border-white/[0.08] overflow-x-auto">
         {changes.map((c, idx) => (
           <button
             key={idx}
             type="button"
             onClick={() => setSelectedFileIdx(idx)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-t-lg text-xs font-mono border-t border-x transition-colors cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-t-lg text-xs sm:text-sm border-t border-x transition-colors cursor-pointer ${
               selectedFileIdx === idx
                 ? "bg-[#111214] border-white/[0.12] text-[#F2F2F0] font-semibold border-b-2 border-b-[#F0A43C]"
                 : "border-transparent text-[#A6A6A3] hover:text-[#F2F2F0] hover:bg-[#111214]/50"
@@ -123,15 +123,15 @@ export default function DiffViewer({
                 c.change_type === "create" ? "bg-[#22C55E]" : "bg-[#F0A43C]"
               }`}
             />
-            <span>{c.path}</span>
+            <span className="font-mono text-xs sm:text-[13px]">{c.path}</span>
           </button>
         ))}
       </div>
 
       {/* Content Area */}
-      <div className="p-3 bg-[#0D0E10] max-h-[380px] overflow-y-auto">
+      <div className="p-3.5 bg-[#0D0E10] max-h-[400px] overflow-y-auto">
         {activeChange.description && (
-          <div className="mb-2 p-2 rounded bg-[#111214] border border-white/[0.08] text-xs text-[#F2F2F0]">
+          <div className="mb-2.5 p-2.5 rounded-lg bg-[#111214] border border-white/[0.08] text-sm text-[#F2F2F0]">
             <span className="font-semibold text-[#F6D58A]">Agent note: </span>
             {activeChange.description}
           </div>
@@ -140,28 +140,28 @@ export default function DiffViewer({
         {viewMode === "diff" ? (
           renderDiffLines(activeChange.diff || activeChange.content)
         ) : (
-          <pre className="p-3 bg-[#111214] border border-white/[0.08] rounded-lg text-xs font-mono text-[#F2F2F0] whitespace-pre overflow-x-auto">
+          <pre className="p-3.5 bg-[#111214] border border-white/[0.08] rounded-xl text-xs sm:text-[13px] font-mono text-[#F2F2F0] whitespace-pre overflow-x-auto leading-relaxed">
             {activeChange.content}
           </pre>
         )}
       </div>
 
       {/* Human Approval Action Bar */}
-      <div className="p-3 bg-[#0A0A0B] border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
-        <div className="text-xs text-[#A6A6A3] font-mono flex items-center gap-1.5">
+      <div className="p-3.5 bg-[#0A0A0B] border-t border-white/[0.08] flex flex-wrap items-center justify-between gap-3">
+        <div className="text-xs sm:text-sm text-[#A6A6A3] flex items-center gap-2">
           <span>Status: </span>
           <span className="text-[#F2F2F0] font-semibold uppercase">{taskStatus.replace("_", " ")}</span>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
           {onCancel && taskStatus !== "completed" && taskStatus !== "cancelled" && (
             <button
               type="button"
               onClick={onCancel}
               disabled={isProcessing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/[0.08] hover:bg-[#111214] text-[#A6A6A3] hover:text-[#F2F2F0] text-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-white/[0.08] hover:bg-[#111214] text-[#A6A6A3] hover:text-[#F2F2F0] text-xs sm:text-sm transition-colors cursor-pointer"
             >
-              <Ban className="w-3.5 h-3.5" />
+              <Ban className="w-4 h-4" />
               Cancel Task
             </button>
           )}
@@ -171,9 +171,9 @@ export default function DiffViewer({
               type="button"
               onClick={onReject}
               disabled={isProcessing}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#EF4444]/30 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] text-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-[#EF4444]/30 bg-[#EF4444]/10 hover:bg-[#EF4444]/20 text-[#EF4444] text-xs sm:text-sm transition-colors cursor-pointer font-medium"
             >
-              <XCircle className="w-3.5 h-3.5" />
+              <XCircle className="w-4 h-4" />
               Reject Changes
             </button>
           )}
@@ -183,9 +183,9 @@ export default function DiffViewer({
               type="button"
               onClick={onApprove}
               disabled={isProcessing}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-lg bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#0A0A0B] font-semibold text-xs transition-all shadow-sm cursor-pointer"
+              className="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#22C55E] hover:bg-[#22C55E]/90 text-[#0A0A0B] font-semibold text-xs sm:text-sm transition-all shadow-sm cursor-pointer"
             >
-              <CheckCircle2 className="w-3.5 h-3.5 stroke-[2.5]" />
+              <CheckCircle2 className="w-4 h-4 stroke-[2.5]" />
               Approve & Apply Changes
             </button>
           )}

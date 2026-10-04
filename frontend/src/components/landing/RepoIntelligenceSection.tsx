@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Folder, FolderOpen, FileCode2, FlaskConical, Search, FileCheck, CheckCircle2, ArrowRight } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 interface FileNode {
   path: string;
@@ -69,7 +70,7 @@ export default function RepoIntelligenceSection() {
   }, []);
 
   return (
-    <section id="repo-intelligence" className="py-24 border-b border-white/[0.08] bg-transparent relative overflow-hidden">
+    <section id="repo-intelligence" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="max-w-3xl mb-16">
@@ -88,7 +89,10 @@ export default function RepoIntelligenceSection() {
         {/* 2-Column Split: Animated Repository Explorer on Left, Action Log on Right */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
           {/* Left Column: Repository Tree (6 cols) */}
-          <div className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl overflow-hidden flex flex-col justify-between">
+          <InteractiveCard
+            variant="tilt"
+            className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl overflow-hidden flex flex-col justify-between hover:border-white/[0.14]"
+          >
             <div className="h-10 bg-[#0D0E10] border-b border-white/[0.08] px-4 flex items-center justify-between font-mono text-xs">
               <div className="flex items-center gap-2 text-[#F2F2F0]">
                 <FolderOpen className="w-3.5 h-3.5 text-[#F6D58A]" />
@@ -146,10 +150,14 @@ export default function RepoIntelligenceSection() {
               <span>Indexed: 42 files (12 models, 18 tests)</span>
               <span className="text-[#22C55E]">Graph Root Verified</span>
             </div>
-          </div>
+          </InteractiveCard>
 
           {/* Right Column: Simulated Action Stream (6 cols) */}
-          <div className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] p-6 flex flex-col justify-between shadow-xl">
+          <InteractiveCard
+            variant="spotlight"
+            revealDelay={120}
+            className="lg:col-span-6 rounded-xl border border-white/[0.08] bg-[#111214] p-6 flex flex-col justify-between shadow-xl hover:border-white/[0.14]"
+          >
             <div>
               <div className="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-5 font-mono text-xs">
                 <span className="text-[#6B6B6B] uppercase font-semibold">Repository Analyzer Node</span>
@@ -201,7 +209,7 @@ export default function RepoIntelligenceSection() {
               <span className="text-[#A6A6A3]">Output Contract:</span>
               <span className="text-[#F6D58A] font-semibold">AgentState.relevant_files</span>
             </div>
-          </div>
+          </InteractiveCard>
         </div>
       </div>
     </section>

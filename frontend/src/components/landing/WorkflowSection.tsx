@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Sparkles, Database, Code2, FlaskConical, Wrench, ArrowRight } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function WorkflowSection() {
   const [activeStage, setActiveStage] = useState(0);
@@ -67,7 +68,7 @@ export default function WorkflowSection() {
   const current = stages[activeStage];
 
   return (
-    <section id="workflow" className="py-24 border-b border-white/[0.08] bg-transparent relative">
+    <section id="workflow" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-3xl mb-14">
@@ -90,17 +91,21 @@ export default function WorkflowSection() {
             const isHovered = activeStage === idx;
 
             return (
-              <div
+              <InteractiveCard
                 key={stage.step}
-                onMouseEnter={() => setActiveStage(idx)}
-                onClick={() => setActiveStage(idx)}
+                variant="interactive"
+                revealDelay={idx * 70}
+                disabled={isHovered}
                 className={`relative p-5 rounded-xl border transition-all cursor-pointer select-none flex flex-col justify-between ${
                   isHovered
                     ? `${stage.bgGlow} ${stage.border} shadow-lg shadow-black/50 scale-[1.02]`
                     : "bg-[#111214] border-white/[0.08] hover:border-white/[0.16]"
                 }`}
+                onClick={() => setActiveStage(idx)}
               >
-                <div>
+                <div
+                  onMouseEnter={() => setActiveStage(idx)}
+                >
                   <div className="flex items-center justify-between mb-4">
                     <span className="text-xs font-mono font-bold text-[#6B6B6B]">
                       {stage.step}
@@ -126,13 +131,16 @@ export default function WorkflowSection() {
                     <ArrowRight className="w-3.5 h-3.5" />
                   </div>
                 )}
-              </div>
+              </InteractiveCard>
             );
           })}
         </div>
 
         {/* Detailed Inspector Panel for Selected Stage */}
-        <div className="p-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs">
+        <InteractiveCard
+          variant="subtle"
+          className="p-6 rounded-xl border border-white/[0.08] bg-[#111214] shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-mono text-xs hover:border-white/[0.14]"
+        >
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-[#F0A43C] font-bold">STAGE {current.step} INSPECTOR:</span>
@@ -145,7 +153,7 @@ export default function WorkflowSection() {
           <div className="px-3 py-1.5 rounded bg-[#0D0E10] border border-white/[0.08] text-[11px] text-[#F6D58A] shrink-0 font-mono">
             State Transition Validated ✓
           </div>
-        </div>
+        </InteractiveCard>
       </div>
     </section>
   );

@@ -84,17 +84,45 @@ const SIMULATED_STAGES: StepState[] = [
 export default function HeroProductVisualization() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [animatedPassed, setAnimatedPassed] = useState(0);
+  const [animatedFailed, setAnimatedFailed] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0 });
 
-  // Autonomous loop
+  // Autonomous loop with tuned pacing
   useEffect(() => {
     if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentIdx((prev) => (prev + 1) % SIMULATED_STAGES.length);
-    }, 3600);
+    }, 3200);
     return () => clearInterval(timer);
   }, [isPaused]);
+
+  // Smooth test counter animation per stage
+  useEffect(() => {
+    const target = SIMULATED_STAGES[currentIdx].testOutcome;
+    if (target.status === "idle") {
+      setAnimatedPassed(0);
+      setAnimatedFailed(0);
+      return;
+    }
+
+    setAnimatedPassed(0);
+    setAnimatedFailed(0);
+    let p = 0;
+    const stepInterval = setInterval(() => {
+      p += 5;
+      if (p >= target.passed) {
+        setAnimatedPassed(target.passed);
+        setAnimatedFailed(target.failed);
+        clearInterval(stepInterval);
+      } else {
+        setAnimatedPassed(p);
+      }
+    }, 45);
+
+    return () => clearInterval(stepInterval);
+  }, [currentIdx]);
 
   // Subtle mouse perspective depth on desktop
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -294,9 +322,9 @@ export default function HeroProductVisualization() {
             <div className="text-[10px] font-mono text-[#6B6B6B] uppercase">Test Verification</div>
             <div className="flex items-center justify-between mt-1">
               <span className="text-xs font-mono text-[#F2F2F0]">
-                {current.testOutcome.passed} passed
-                {current.testOutcome.failed > 0 && (
-                  <span className="text-[#EF4444] ml-1">({current.testOutcome.failed} failed)</span>
+                {animatedPassed} passed
+                {animatedFailed > 0 && (
+                  <span className="text-[#EF4444] ml-1">({animatedFailed} failed)</span>
                 )}
               </span>
               {current.testOutcome.status === "passed" && (

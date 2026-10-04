@@ -2,19 +2,34 @@
 
 import { useState, useEffect } from "react";
 import { CheckCircle2, XCircle, RotateCw, ShieldCheck, ArrowRight } from "lucide-react";
+import InteractiveCard from "./InteractiveCard";
 
 export default function ProductStatement() {
   const [mode, setMode] = useState<"generate" | "verify">("generate");
 
   useEffect(() => {
+    const handleScroll = () => {
+      const el = document.getElementById("how-it-works");
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.6 && rect.bottom >= window.innerHeight * 0.2) {
+        setMode("verify");
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     const timer = setInterval(() => {
       setMode((prev) => (prev === "generate" ? "verify" : "generate"));
-    }, 3800);
-    return () => clearInterval(timer);
+    }, 4200);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearInterval(timer);
+    };
   }, []);
 
   return (
-    <section id="how-it-works" className="py-24 border-b border-white/[0.08] bg-transparent relative overflow-hidden">
+    <section id="how-it-works" className="py-24 border-b border-white/[0.08] bg-transparent relative z-10 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Editorial Heading with Transformation Morph */}
         <div className="max-w-3xl mx-auto text-center mb-16">
@@ -78,12 +93,14 @@ export default function ProductStatement() {
         {/* Visual Comparison Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
           {/* Typical Coding Assistant */}
-          <div
-            className={`p-6 sm:p-8 rounded-xl border transition-all ${
+          <InteractiveCard
+            variant="interactive"
+            className={`p-6 sm:p-8 rounded-xl border transition-all h-full ${
               mode === "generate"
                 ? "border-[#EF4444]/40 bg-[#111214] shadow-xl shadow-black/50"
                 : "border-white/[0.06] bg-[#111214]/60 opacity-80"
-            } flex flex-col justify-between`}
+            }`}
+            innerClassName="h-full flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6">
@@ -122,15 +139,18 @@ export default function ProductStatement() {
             <div className="pt-6 mt-6 border-t border-white/[0.08] text-xs text-[#6B6B6B] leading-relaxed font-mono">
               Blind to runtime errors, missing imports, and broken unit tests. The human remains the debugger.
             </div>
-          </div>
+          </InteractiveCard>
 
           {/* AI Software Engineering Assistant */}
-          <div
-            className={`p-6 sm:p-8 rounded-xl border transition-all ${
+          <InteractiveCard
+            variant="spotlight"
+            revealDelay={120}
+            className={`p-6 sm:p-8 rounded-xl border transition-all h-full ${
               mode === "verify"
-                ? "border-[#F0A43C]/50 bg-[#111214] shadow-2xl shadow-black/60 scale-[1.01]"
+                ? "border-[#F0A43C]/50 bg-[#111214] shadow-2xl shadow-black/60"
                 : "border-white/[0.08] bg-[#111214]"
-            } flex flex-col justify-between`}
+            }`}
+            innerClassName="h-full flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-6">
@@ -183,7 +203,7 @@ export default function ProductStatement() {
             <div className="pt-6 mt-6 border-t border-white/[0.08] text-xs text-[#A6A6A3] leading-relaxed font-mono">
               Executes in an isolated sandbox, diagnoses stack traces, and only presents verified diffs for human approval.
             </div>
-          </div>
+          </InteractiveCard>
         </div>
       </div>
     </section>

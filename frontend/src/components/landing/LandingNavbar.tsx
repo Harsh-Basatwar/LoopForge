@@ -1,19 +1,48 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
-import { Cpu, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export default function LandingNavbar() {
   const [scrolled, setScrolled] = useState(false);
+
+  const [heartbeatIdx, setHeartbeatIdx] = useState(0);
+
+  const heartbeatStates = [
+    { label: "AGENT READY", color: "text-[#A6A6A3]", dot: "bg-[#22C55E]" },
+    { label: "ANALYZING AST", color: "text-[#F6D58A]", dot: "bg-[#F0A43C] animate-pulse" },
+    { label: "GENERATING DIFF", color: "text-[#F0A43C]", dot: "bg-[#F0A43C] animate-pulse" },
+    { label: "EXECUTING PYTEST", color: "text-[#F2F2F0]", dot: "bg-white animate-pulse" },
+    { label: "REFLECTING", color: "text-[#F6D58A]", dot: "bg-[#EF4444] animate-pulse" },
+    { label: "VERIFIED ✓", color: "text-[#22C55E]", dot: "bg-[#22C55E]" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+
+    const heartbeatTimer = setInterval(() => {
+      setHeartbeatIdx((prev) => (prev + 1) % heartbeatStates.length);
+    }, 2800);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearInterval(heartbeatTimer);
+    };
+  }, [heartbeatStates.length]);
+
+  const currentHeartbeat = heartbeatStates[heartbeatIdx];
+
+  const handleLogoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window !== "undefined" && window.location.pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
 
   return (
     <header
@@ -24,21 +53,37 @@ export default function LandingNavbar() {
       }`}
     >
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-7 h-7 rounded-md bg-[#111214] border border-white/[0.08] flex items-center justify-center group-hover:border-[#F0A43C]/40 group-hover:scale-105 transition-all">
-            <Cpu className="w-4 h-4 text-[#F0A43C] stroke-[2.2]" />
+        {/* Brand & System Heartbeat */}
+        <div className="flex items-center gap-4">
+          <Link
+            href="/"
+            onClick={handleLogoClick}
+            className="flex items-center group relative cursor-pointer select-none logo-hover animate-logo-entrance shrink-0"
+            aria-label="LoopForge Home"
+          >
+            <Image
+              src="/loopforge-logo.png"
+              alt="LoopForge"
+              width={674}
+              height={141}
+              priority
+              className={`object-contain transition-all duration-300 ease-apple ${
+                scrolled
+                  ? "w-[118px] sm:w-[128px] h-auto"
+                  : "w-[134px] sm:w-[145px] h-auto"
+              }`}
+            />
+          </Link>
+
+          {/* System Heartbeat Telemetry */}
+          <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#111214] border border-white/[0.08] text-[10px] font-mono shadow-sm transition-all">
+            <span className={`w-1.5 h-1.5 rounded-full ${currentHeartbeat.dot}`} />
+            <span className={currentHeartbeat.color}>{currentHeartbeat.label}</span>
           </div>
-          <span className="font-semibold text-[#F2F2F0] text-sm tracking-tight">
-            AI Software Engineer
-          </span>
-          <span className="text-[10px] font-mono uppercase tracking-wider px-1.5 py-0.5 rounded bg-[#111214] text-[#F6D58A] border border-white/[0.08] hidden sm:inline">
-            LangGraph
-          </span>
-        </Link>
+        </div>
 
         {/* Navigation Links with Underline Reveal */}
-        <nav className="hidden md:flex items-center gap-7 text-xs font-medium text-[#A6A6A3]">
+        <nav className="hidden md:flex items-center gap-8 text-[15px] font-medium text-[#A6A6A3] tracking-[0.01em]">
           {[
             { href: "#how-it-works", label: "How It Works" },
             { href: "#workflow", label: "Workflow" },
@@ -72,7 +117,7 @@ export default function LandingNavbar() {
 
           <Link
             href="/workspace"
-            className="flex items-center gap-1.5 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all active:scale-95 shadow-sm group cursor-pointer"
+            className="flex items-center gap-1.5 bg-[#F0A43C] hover:bg-[#F5B85D] text-[#0A0A0B] font-semibold px-4 py-1.5 rounded-lg text-sm transition-all active:scale-95 shadow-sm group cursor-pointer"
           >
             <span>Start Building</span>
             <ArrowRight className="w-3.5 h-3.5 stroke-[2.5] group-hover:translate-x-0.5 transition-transform" />
